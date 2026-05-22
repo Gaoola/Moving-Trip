@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>Chino → Shawnee</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --clay:#A0694A;--dust:#C4A882;--stone:#D6CCC0;--sage:#8A9E8C;--warm:#E8DDD4;
+  --bg:#F7F3EE;--card:#FFFFFF;--text:#1E1A17;--muted:#8A7A6E;--subtle:#C8BDB4;
+  --border:#E4DDD6;--r:12px;
+  --font:"Georgia","Times New Roman",serif;
+  --sans:-apple-system,BlinkMacSystemFont,"Helvetica Neue",Arial,sans-serif
+}
+@media(prefers-color-scheme:dark){:root{
+  --bg:#18140F;--card:#221C16;--text:#F0EBE4;--muted:#9A8878;--border:#362E26;--warm:#2A2018
+}}
+html{scroll-behavior:smooth}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;max-width:500px;margin:0 auto;min-height:100vh}
+
+/* ── HERO ── */
+.hero{
+  background:linear-gradient(170deg,#2C1F14 0%,#3D2A1A 40%,#5C3D26 70%,#7A5234 100%);
+  color:#F0E8DC;padding:60px 24px 32px;text-align:center;position:relative;overflow:hidden
+}
+.hero::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.02'%3E%3Ccircle cx='30' cy='30' r='1'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  pointer-events:none
+}
+.hero-eyebrow{font-family:var(--sans);font-size:10px;font-weight:500;letter-spacing:2.5px;text-transform:uppercase;opacity:.5;margin-bottom:14px}
+.hero h1{font-family:var(--font);font-size:34px;font-weight:400;letter-spacing:1px;margin-bottom:6px;line-height:1.15}
+.hero-sub{font-size:13px;opacity:.45;letter-spacing:.5px;margin-bottom:26px;font-family:var(--sans)}
+.hero-divider{width:32px;height:1px;background:rgba(240,232,220,.3);margin:0 auto 22px}
+.stats{display:flex;gap:0;border-top:1px solid rgba(240,232,220,.12);padding-top:20px}
+.stat{flex:1;text-align:center;border-right:1px solid rgba(240,232,220,.12)}
+.stat:last-child{border-right:none}
+.stat-n{font-family:var(--font);font-size:22px;font-weight:400;display:block;line-height:1;letter-spacing:.5px}
+.stat-l{font-family:var(--sans);font-size:9px;opacity:.4;text-transform:uppercase;letter-spacing:1.2px;margin-top:5px;display:block}
+
+/* ── ROUTE MAP ── */
+.map-wrap{background:#EDE6DC;padding:0}
+@media(prefers-color-scheme:dark){.map-wrap{background:#1E1710}}
+#rmap{display:block;width:100%;height:auto}
+
+/* ── TABS ── */
+.tabs{
+  display:flex;background:var(--card);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch
+}
+.tabs::-webkit-scrollbar{display:none}
+.tab{
+  flex:1;min-width:72px;padding:14px 4px;text-align:center;
+  font-family:var(--sans);font-size:12px;font-weight:400;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--muted);border-bottom:1px solid transparent;margin-bottom:-1px;
+  cursor:pointer;white-space:nowrap;transition:color .2s,border-color .2s;user-select:none
+}
+.tab.on{color:var(--clay);border-bottom-color:var(--clay)}
+
+/* ── PANELS ── */
+.panel{display:none;padding-bottom:70px}
+.panel.on{display:block}
+
+/* ── SECTION LABEL ── */
+.sec{
+  font-family:var(--sans);font-size:10px;font-weight:500;text-transform:uppercase;
+  letter-spacing:2px;color:var(--subtle);padding:24px 20px 10px
+}
+
+/* ── STOP CARDS ── */
+.stops{padding:0 16px}
+.stop{
+  background:var(--card);border-radius:var(--r);padding:16px;margin-bottom:8px;
+  display:flex;gap:14px;align-items:flex-start;border:1px solid var(--border)
+}
+.sdot{
+  width:36px;height:36px;border-radius:50%;display:flex;align-items:center;
+  justify-content:center;font-size:15px;flex-shrink:0;margin-top:1px;border:1px solid var(--border)
+}
+.d-start{background:#EDF4EF;color:#5A8C6A}
+.d-charge{background:#F5F0E8;color:#8A6840}
+.d-sleep{background:#F7F0EC;color:#A06848}
+.d-end{background:#F5EEED;color:#A04848}
+@media(prefers-color-scheme:dark){
+  .d-start{background:#142010}.d-charge{background:#2A1E0A}.d-sleep{background:#2C1408}.d-end{background:#280C0C}
+}
+.sbody{flex:1;min-width:0}
+.sname{font-size:15px;font-weight:500;margin-bottom:3px;line-height:1.3;letter-spacing:-.1px}
+.sdesc{font-size:13px;color:var(--muted);line-height:1.5}
+.smiles{font-family:var(--sans);font-size:11px;color:var(--clay);font-weight:500;margin-top:4px;letter-spacing:.3px;text-transform:uppercase}
+.note{
+  display:inline-block;font-size:11px;padding:2px 10px;border-radius:20px;margin-top:6px;
+  background:var(--warm);color:var(--muted);letter-spacing:.2px
+}
+.note.warn{background:#FAF0EE;color:#8A4838}
+@media(prefers-color-scheme:dark){.note{background:#2A2018;color:#9A8878}.note.warn{background:#2A1210;color:#C07060}}
+
+/* ── NAV BUTTON ── */
+.nbtn{
+  display:inline-flex;align-items:center;gap:5px;
+  background:transparent;color:var(--clay);
+  border:1px solid var(--clay);border-radius:6px;
+  padding:6px 13px;font-size:11px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;
+  cursor:pointer;text-decoration:none;margin-top:8px;font-family:var(--sans);
+  transition:background .15s,color .15s;-webkit-tap-highlight-color:transparent
+}
+.nbtn:active{background:var(--clay);color:#fff}
+
+/* ── ACTIVITY CARDS ── */
+.acts{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px}
+.act{
+  background:var(--card);border-radius:var(--r);padding:14px;
+  border:1px solid var(--border);display:flex;flex-direction:column
+}
+.aemoji{font-size:22px;margin-bottom:8px;opacity:.85}
+.aname{font-size:13px;font-weight:500;margin-bottom:4px;letter-spacing:-.1px}
+.adesc{font-size:12px;color:var(--muted);line-height:1.5;flex:1}
+.ameta{font-size:10px;color:var(--subtle);margin-top:6px;letter-spacing:.3px;text-transform:uppercase}
+.arating{color:var(--clay);font-weight:600}
+
+/* ── TIP BOX ── */
+.tip{
+  background:var(--card);border-left:2px solid var(--dust);
+  border-radius:0 var(--r) var(--r) 0;
+  padding:12px 16px;margin:0 16px 8px;font-size:13px;color:var(--muted);line-height:1.65;
+  border-top:1px solid var(--border);border-right:1px solid var(--border);border-bottom:1px solid var(--border)
+}
+
+/* ── DAY HEADER ── */
+.dh{
+  background:var(--warm);
+  padding:20px;border-bottom:1px solid var(--border);margin-bottom:4px
+}
+.dh-eyebrow{font-size:10px;letter-spacing:2px;text-transform:uppercase;color:var(--clay);margin-bottom:6px;font-weight:500}
+.dh h2{font-family:var(--font);font-size:22px;font-weight:400;margin-bottom:4px;letter-spacing:.3px}
+.dh-meta{font-size:13px;color:var(--muted)}
+@media(prefers-color-scheme:dark){.dh{background:var(--warm)}}
+
+/* ── OVERVIEW GRID ── */
+.ov-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 16px}
+.ov-card{background:var(--card);border-radius:var(--r);padding:16px;border:1px solid var(--border)}
+.ov-icon{font-size:22px;margin-bottom:10px;opacity:.8}
+.ov-title{font-size:12px;font-weight:600;margin-bottom:4px;letter-spacing:.3px;text-transform:uppercase;color:var(--muted)}
+.ov-text{font-size:13px;color:var(--text);line-height:1.55}
+
+/* ── VEHICLES ── */
+.vehicles{display:flex;gap:8px;padding:0 16px}
+.vcard{flex:1;background:var(--card);border-radius:var(--r);padding:16px;border:1px solid var(--border);text-align:center}
+.vicon{font-size:28px;margin-bottom:8px;opacity:.8}
+.vtitle{font-size:12px;font-weight:600;letter-spacing:.3px;text-transform:uppercase;color:var(--muted);margin-bottom:5px}
+.vtext{font-size:12px;color:var(--text);line-height:1.5}
+
+/* ── FULL-WIDTH ACT ── */
+.act-full{grid-column:span 2}
+
+/* ── DIVIDER ── */
+.panel-divider{height:1px;background:var(--border);margin:8px 16px 0}
+
+/* ── FOOTER ── */
+.footer{text-align:center;padding:32px 20px;font-size:11px;color:var(--subtle);border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+</style>
+</head>
+<body>
+
+<!-- ════════════ HERO ════════════ -->
+<div class="hero">
+  <div class="hero-eyebrow">Family Road Trip</div>
+  <h1>Chino → Shawnee</h1>
+  <p class="hero-sub">California · Arizona · New Mexico · Texas · Oklahoma</p>
+  <div class="hero-divider"></div>
+  <div class="stats">
+    <div class="stat"><span class="stat-n">1,340</span><span class="stat-l">Miles</span></div>
+    <div class="stat"><span class="stat-n">3</span><span class="stat-l">Days</span></div>
+    <div class="stat"><span class="stat-n">7</span><span class="stat-l">Charges</span></div>
+    <div class="stat"><span class="stat-n">4</span><span class="stat-l">Kids</span></div>
+    <div class="stat"><span class="stat-n">2</span><span class="stat-l">Families</span></div>
+  </div>
+</div>
+
+<!-- ════════════ ROUTE MAP ════════════ -->
+<div class="map-wrap">
+<svg id="rmap" viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
+  <!-- State labels -->
+  <text x="78"  y="160" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">CA</text>
+  <text x="235" y="100" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">AZ</text>
+  <text x="440" y="148" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">NM</text>
+  <text x="645" y="150" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">TX</text>
+  <text x="815" y="116" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">OK</text>
+
+  <!-- State dividers — very faint -->
+  <line x1="128" y1="60" x2="142" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
+  <line x1="355" y1="60" x2="360" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
+  <line x1="555" y1="60" x2="560" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
+  <line x1="757" y1="60" x2="760" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
+
+  <!-- Route — Day 1 (warm clay) -->
+  <path d="M62,150 C70,135 78,122 86,118 L197,107 L289,106"
+        stroke="#A0694A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Route — Day 2 (dusty stone) -->
+  <path d="M289,106 L391,92 L475,111 L648,107"
+        stroke="#B8A080" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+  <!-- Route — Day 3 (muted sage) -->
+  <path d="M648,107 L807,94 L838,97"
+        stroke="#7A9480" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Charge stops -->
+  <circle cx="86"  cy="118" r="3.5" fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
+  <circle cx="197" cy="107" r="3.5" fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
+  <circle cx="391" cy="92"  r="3.5" fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
+  <circle cx="475" cy="111" r="4"   fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
+  <circle cx="807" cy="94"  r="3.5" fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
+
+  <!-- Overnight stops -->
+  <circle cx="289" cy="106" r="6.5" fill="#A0694A" stroke="#EDE6DC" stroke-width="1.5"/>
+  <circle cx="648" cy="107" r="6.5" fill="#A0694A" stroke="#EDE6DC" stroke-width="1.5"/>
+
+  <!-- Start / End -->
+  <circle cx="62"  cy="150" r="6"   fill="#7A9480" stroke="#EDE6DC" stroke-width="1.5"/>
+  <circle cx="838" cy="97"  r="6"   fill="#A04848" stroke="#EDE6DC" stroke-width="1.5"/>
+
+  <!-- Labels — minimal -->
+  <text x="62"  y="165" font-family="-apple-system,sans-serif" font-size="8.5" fill="#7A9480" font-weight="500" text-anchor="middle" letter-spacing=".5">Chino</text>
+  <text x="289" y="97"  font-family="-apple-system,sans-serif" font-size="8.5" fill="#A0694A" font-weight="500" text-anchor="middle" letter-spacing=".5">Flagstaff</text>
+  <text x="648" y="98"  font-family="-apple-system,sans-serif" font-size="8.5" fill="#A0694A" font-weight="500" text-anchor="middle" letter-spacing=".5">Amarillo</text>
+  <text x="838" y="87"  font-family="-apple-system,sans-serif" font-size="8.5" fill="#A04848" font-weight="500" text-anchor="middle" letter-spacing=".5">Shawnee</text>
+
+  <!-- Legend — quiet -->
+  <circle cx="28" cy="18" r="4" fill="#7A9480"/>
+  <text x="37" y="22" font-family="-apple-system,sans-serif" font-size="9" fill="#B4A090" letter-spacing=".5">Start / End</text>
+  <circle cx="106" cy="18" r="4" fill="#A0694A"/>
+  <text x="115" y="22" font-family="-apple-system,sans-serif" font-size="9" fill="#B4A090" letter-spacing=".5">Overnight</text>
+  <circle cx="184" cy="18" r="4" fill="#C4A882"/>
+  <text x="193" y="22" font-family="-apple-system,sans-serif" font-size="9" fill="#B4A090" letter-spacing=".5">Supercharger</text>
+</svg>
+</div>
+
+<!-- ════════════ TABS ════════════ -->
+<div class="tabs">
+  <div class="tab on"  onclick="go(0)">Overview</div>
+  <div class="tab"     onclick="go(1)">Day One</div>
+  <div class="tab"     onclick="go(2)">Day Two</div>
+  <div class="tab"     onclick="go(3)">Day Three</div>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERVIEW
+════════════════════════════════════════ -->
+<div id="p0" class="panel on">
+
+  <p class="sec">The Journey</p>
+  <div class="ov-grid">
+    <div class="ov-card">
+      <div class="ov-icon">🗺️</div>
+      <div class="ov-title">Route</div>
+      <div class="ov-text">I-15 North to I-40 East — the most direct path through the American Southwest.</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-icon">🌙</div>
+      <div class="ov-title">Overnights</div>
+      <div class="ov-text">Night one in Flagstaff, AZ at 7,000 ft. Night two in Amarillo, TX.</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-icon">👨‍👩‍👧</div>
+      <div class="ov-title">The Kids</div>
+      <div class="ov-text">Four kids, ages 2–6. Stop every two hours. Drive through the 12:30–3pm nap window.</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-icon">📶</div>
+      <div class="ov-title">Prep Tonight</div>
+      <div class="ov-text">Cell service is spotty through NM and West TX. Download shows and maps offline now.</div>
+    </div>
+  </div>
+
+  <p class="sec">Vehicles</p>
+  <div class="vehicles">
+    <div class="vcard">
+      <div class="vicon">⚡</div>
+      <div class="vtitle">Tesla Model Y</div>
+      <div class="vtext">~220 mi real range at highway speed. Use the app's trip planner — it routes everything automatically.</div>
+    </div>
+    <div class="vcard">
+      <div class="vicon">🚙</div>
+      <div class="vtitle">Jeep Cherokee</div>
+      <div class="vtext">Fill up at the same stops as the Tesla. Most Superchargers have gas stations within walking distance.</div>
+    </div>
+  </div>
+
+  <p class="sec">Day by Day</p>
+  <div class="stops">
+    <div class="stop">
+      <div class="sdot d-charge" style="font-size:13px;font-weight:500;color:#7A5830;letter-spacing:.5px">I</div>
+      <div class="sbody">
+        <div class="sname">Chino to Flagstaff</div>
+        <div class="sdesc">390 miles · 5.5 hours driving · 2 charge stops</div>
+        <div class="smiles">Walnut Canyon · Lowell Observatory</div>
+      </div>
+    </div>
+    <div class="stop">
+      <div class="sdot d-sleep" style="font-size:13px;font-weight:500;color:#7A4820;letter-spacing:.5px">II</div>
+      <div class="sbody">
+        <div class="sname">Flagstaff to Amarillo</div>
+        <div class="sdesc">450 miles · 6 hours driving · 3 charge stops</div>
+        <div class="smiles">Explora Science Center · Cadillac Ranch</div>
+      </div>
+    </div>
+    <div class="stop">
+      <div class="sdot d-end" style="font-size:13px;font-weight:500;color:#7A3030;letter-spacing:.5px">III</div>
+      <div class="sbody">
+        <div class="sname">Amarillo to Shawnee</div>
+        <div class="sdesc">290 miles · 4 hours driving · 2 charge stops</div>
+        <div class="smiles">Palo Duro Canyon (optional) · Home</div>
+      </div>
+    </div>
+  </div>
+
+  <p class="sec">Tesla Notes</p>
+  <div class="tip">Use the <strong>Tesla trip planner</strong> — it auto-routes Supercharger stops and pre-conditions the battery for faster charging. Always aim to arrive with 10–15% remaining.</div>
+  <div class="tip">Expect <strong>roughly 220 miles of real range</strong> on the highway with AC, full load, and passengers. The app accounts for this — trust its estimates.</div>
+  <div class="tip">A V3 Supercharger adds <strong>~150 miles in 20 minutes</strong>. Time each stop with bathroom and snack breaks — the kids will need them every two hours regardless.</div>
+
+  <p class="sec">Traveling with Kids</p>
+  <div class="tip">Prepare a small bag for each child with a few new, unseen activities — sticker books, a small toy, a drawing pad. Reveal one every couple of hours.</div>
+  <div class="tip">Schedule your longest stretches during the 12:30–3pm window. The two-year-olds especially will sleep right through in the car.</div>
+  <div class="tip">Book suites over standard rooms. Residence Inn, Embassy Suites, and Home2 Suites all have separate living areas — eight people in one room is untenable.</div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     DAY ONE
+════════════════════════════════════════ -->
+<div id="p1" class="panel">
+  <div class="dh">
+    <div class="dh-eyebrow">Day One</div>
+    <h2>Chino to Flagstaff</h2>
+    <div class="dh-meta">390 miles · approx. 5.5 hours · 2 charge stops · Overnight Flagstaff, AZ</div>
+  </div>
+
+  <p class="sec">Route</p>
+  <div class="stops">
+
+    <div class="stop">
+      <div class="sdot d-start">⟶</div>
+      <div class="sbody">
+        <div class="sname">14656 Marist Ln, Chino</div>
+        <div class="sdesc">Depart by 7am. North on I-15, then east on I-40 at Barstow.</div>
+        <a class="nbtn" href="https://maps.apple.com/?q=14656+Marist+Ln,Chino,CA+91710&ll=33.9873,-117.6728">Open in Maps</a>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="sdot d-charge">⚡</div>
+      <div class="sbody">
+        <div class="sname">Barstow Supercharger</div>
+        <div class="sdesc">2812 Lenwood Rd, Barstow, CA · 4.3 stars · 50+ stalls</div>
+        <div class="smiles">90 miles from Chino</div>
+        <span class="note">Outlets mall nearby · Good breakfast stop</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?daddr=34.8493,-117.0856&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="sdot d-charge">⚡</div>
+      <div class="sbody">
+        <div class="sname">Kingman Supercharger</div>
+        <div class="sdesc">120 W Andy Devine Ave, Kingman, AZ · 4.6 stars · 16 stalls</div>
+        <div class="smiles">240 miles from Chino</div>
+        <span class="note">Route 66 Museum lot · Mr D'z Diner nearby</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.1894,-114.0588&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="sdot d-sleep">🌙</div>
+      <div class="sbody">
+        <div class="sname">Overnight — Flagstaff, AZ</div>
+        <div class="sdesc">Arrive around 1–2pm. Cool mountain town at 7,000 ft. Family hotels throughout.</div>
+        <div class="smiles">390 miles · End of day one</div>
+        <span class="note">Request suites — 8 people need breathing room</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?q=Family+Hotels+Flagstaff+AZ&ll=35.1983,-111.6513">Find Hotels</a>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="sec">Flagstaff</p>
+  <div class="acts">
+
+    <div class="act">
+      <div class="aemoji">🏛️</div>
+      <div class="aname">Walnut Canyon</div>
+      <div class="adesc">Ancient cliff dwellings built into canyon walls. Exit 204 off I-40 — stop here on the way in. Stroller-friendly rim trail, 1.6 mi hike.</div>
+      <div class="ameta"><span class="arating">4.8</span> · 9am–5pm · $15 per vehicle</div>
+      <a class="nbtn" href="https://maps.apple.com/?q=Walnut+Canyon+National+Monument&ll=35.1690,-111.5043">Maps</a>
+    </div>
+
+    <div class="act">
+      <div class="aemoji">🔭</div>
+      <div class="aname">Lowell Observatory</div>
+      <div class="adesc">Where Pluto was discovered. Kids' hands-on play center, planetarium shows, and five working telescopes to look through.</div>
+      <div class="ameta"><span class="arating">4.7</span> · Opens 1pm · $35 adult</div>
+      <a class="nbtn" href="https://maps.apple.com/?q=Lowell+Observatory+Flagstaff&ll=35.2025,-111.6666">Maps</a>
+    </div>
+
+  </div>
+
+  <p class="sec">Notes</p>
+  <div class="tip">Leave Chino by 7am to arrive in Flagstaff early afternoon — you'll have the entire evening for exploring. Flagstaff has a walkable downtown with great restaurants.</div>
+  <div class="tip">Walnut Canyon is 10 miles east of Flagstaff (exit 204) — stop there on the way into town, then check in, then Lowell Observatory in the evening.</div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     DAY TWO
+════════════════════════════════════════ -->
+<div id="p2" class="panel">
+  <div class="dh">
+    <div class="dh-eyebrow">Day Two</div>
+    <h2>Flagstaff to Amarillo</h2>
+    <div class="dh-meta">450 miles · approx. 6 hours · 3 charge stops · Overnight Amarillo, TX</div>
+  </div>
+
+  <p class="sec">Route</p>
+  <div class="stops">
+
+    <div class="stop">
+      <div class="sdot d-charge">⚡</div>
+      <div class="sbody">
+        <div class="sname">Flagstaff Supercharger</div>
+        <div class="sdesc">US-89, Flagstaff, AZ · 4.6 stars · 24 stalls · Very fast</div>
+        <div class="smiles">First thing in the morning — full charge before NM</div>
+        <a class="nbtn" href="https://maps.apple.com/?daddr=35.2318,-111.5757&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="sdot d-charge">⚡</div>
+      <div class="sbody">
+        <div class="sname">Gallup Supercharger</div>
+        <div class="sdesc">Gallup, NM · 3.9 stars · 8 stalls · Best Western lot</div>
+        <div class="smiles">190 miles from Flagstaff</div>
+        <span class="note warn">Slow chargers — top up just enough to reach Albuquerque</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.5053,-108.8281&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="sdot d-charge">⚡</div>
+      <div class="sbody">
+        <div class="sname">Albuquerque Supercharger</div>
+        <div class="sdesc">2200 Louisiana Blvd NE · 4.6 stars · 16 stalls · 252kW peak</div>
+        <div class="smiles">325 miles from Flagstaff</div>
+        <span class="note">Uptown Mall — Target, Trader Joe's, lunch options · Full charge here</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.1043,-106.5658&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="sdot d-sleep">🌙</div>
+      <div class="sbody">
+        <div class="sname">Home2 Suites, Amarillo</div>
+        <div class="sdesc">8251 W Amarillo Blvd · 4.4 stars · Pool, hot tub, free breakfast</div>
+        <div class="smiles">450 miles · End of day two</div>
+        <a class="nbtn" href="https://maps.apple.com/?daddr=35.1909,-101.9310&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="sec">Along the Way</p>
+  <div class="acts">
+
+    <div class="act">
+      <div class="aemoji">🔬</div>
+      <div class="aname">Explora Science Center</div>
+      <div class="adesc">Exceptional hands-on science museum in Albuquerque. Designed for ages 2–10. Charge the Tesla while you explore — perfectly timed.</div>
+      <div class="ameta"><span class="arating">4.8</span> · 10am–5pm · ~$15 · Albuquerque</div>
+      <a class="nbtn" href="https://maps.apple.com/?q=Explora+Science+Center+Albuquerque&ll=35.0973,-106.6642">Maps</a>
+    </div>
+
+    <div class="act">
+      <div class="aemoji">🦒</div>
+      <div class="aname">ABQ BioPark Zoo</div>
+      <div class="adesc">Zoo and aquarium combo. Giraffes, zebras, a baby hippo, and peacocks roaming free throughout.</div>
+      <div class="ameta"><span class="arating">4.5</span> · 9am–5pm · $15 · Albuquerque</div>
+      <a class="nbtn" href="https://maps.apple.com/?q=ABQ+BioPark+Zoo+Albuquerque&ll=35.0771,-106.6606">Maps</a>
+    </div>
+
+    <div class="act">
+      <div class="aemoji">🚗</div>
+      <div class="aname">Cadillac Ranch</div>
+      <div class="adesc">Ten Cadillacs buried nose-first in a field — free to visit, free to spray-paint. Right off I-40, no detour required.</div>
+      <div class="ameta"><span class="arating">4.4</span> · Open 24/7 · Free · Amarillo</div>
+      <a class="nbtn" href="https://maps.apple.com/?q=Cadillac+Ranch+Amarillo+TX&ll=35.1872,-101.9870">Maps</a>
+    </div>
+
+    <div class="act">
+      <div class="aemoji">🏜️</div>
+      <div class="aname">Palo Duro Canyon</div>
+      <div class="adesc">The "Grand Canyon of Texas." Dramatic red canyon walls, 30 minutes south of Amarillo. Easy trails for all ages.</div>
+      <div class="ameta"><span class="arating">4.8</span> · 7:30am–10pm · $8 · Canyon, TX</div>
+      <a class="nbtn" href="https://maps.apple.com/?q=Palo+Duro+Canyon+State+Park&ll=34.9373,-101.6589">Maps</a>
+    </div>
+
+  </div>
+
+  <p class="sec">Notes</p>
+  <div class="tip">Choose one activity in Albuquerque — Explora or the Zoo. There isn't time for both and still reach Amarillo before dark. For ages 2–6, Explora is the better fit.</div>
+  <div class="tip">Pick up a can of spray paint before the Cadillac Ranch exit — there's a shop on the I-40 frontage road right near the turnoff.</div>
+  <div class="tip">The Gallup charger has consistently poor reviews for speed. Don't rely on it for a full charge — just enough to comfortably reach Albuquerque.</div>
+
+</div>
+
+<!-- ════════════════════════════════════════
+     DAY THREE
+════════════════════════════════════════ -->
+<div id="p3" class="panel">
+  <div class="dh">
+    <div class="dh-eyebrow">Day Three</div>
+    <h2>Amarillo to Shawnee</h2>
+    <div class="dh-meta">290 miles · approx. 4 hours · 2 charge stops · You're home</div>
+  </div>
+
+  <p class="sec">Route</p>
+  <div class="stops">
+
+    <div class="stop">
+      <div class="sdot d-charge">⚡</div>
+      <div class="sbody">
+        <div class="sname">Amarillo Supercharger</div>
+        <div class="sdesc">E I-40 Hwy, Amarillo · 4.6 stars · 12 stalls</div>
+        <div class="smiles">Charge before Oklahoma</div>
+        <span class="note">Texas BBQ and a small kids' playground on site</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.1933,-101.7446&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="sdot d-charge">⚡</div>
+      <div class="sbody">
+        <div class="sname">OKC Supercharger</div>
+        <div class="sdesc">7624 W Reno Ave, Oklahoma City · 4.2 stars · 8 stalls</div>
+        <div class="smiles">260 miles from Amarillo</div>
+        <span class="note">OKC Outlets · Last charge of the entire trip</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.4617,-97.6514&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+    <div class="stop">
+      <div class="sdot d-end">⌂</div>
+      <div class="sbody">
+        <div class="sname">213 Hope Ave, Shawnee OK</div>
+        <div class="sdesc">35 miles east of Oklahoma City on I-40. A new chapter begins here.</div>
+        <div class="smiles">290 miles · Journey complete</div>
+        <a class="nbtn" href="https://maps.apple.com/?q=213+Hope+Ave,Shawnee,OK+74804&ll=35.4029,-96.8877">Open in Maps</a>
+      </div>
+    </div>
+
+  </div>
+
+  <p class="sec">Optional Morning</p>
+  <div class="acts">
+    <div class="act act-full">
+      <div class="aemoji">🏜️</div>
+      <div class="aname">Palo Duro Canyon</div>
+      <div class="adesc">Open at 7:30am, 30 minutes south of Amarillo. Even a short drive through the canyon is worth the stop — the scale and color of the rock is extraordinary. Back on I-40 by 10am, still arriving in Shawnee early afternoon.</div>
+      <div class="ameta"><span class="arating">4.8</span> · 10,000+ reviews · 7:30am–10pm · $8 adult · Canyon, TX</div>
+      <a class="nbtn" href="https://maps.apple.com/?q=Palo+Duro+Canyon+State+Park&ll=34.9373,-101.6589">Navigate</a>
+    </div>
+  </div>
+
+  <p class="sec">Notes</p>
+  <div class="tip">The easiest day of the trip — only 290 miles. There's no reason to rush. Sleep in, enjoy the hotel breakfast, take your time. You'll still arrive in Shawnee early afternoon.</div>
+  <div class="tip">If you visit Palo Duro Canyon, go before 9am. The canyon is cooler in the morning and the light is beautiful. Even the scenic drive without hiking takes only 30 minutes.</div>
+
+</div>
+
+<div class="footer">
+  Chino → Shawnee · All navigation opens in Apple Maps
+</div>
+
+<script>
+function go(i){
+  document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i)});
+  document.querySelectorAll('.panel').forEach(function(p,j){p.classList.toggle('on',j===i)});
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+</script>
+</body>
+</html>
