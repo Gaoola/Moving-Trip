@@ -159,6 +159,42 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 
 /* ── FOOTER ── */
 .footer{text-align:center;padding:32px 20px;font-size:11px;color:var(--subtle);border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
+
+/* ── TIME STAMP ── */
+.stime{
+  font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:1.2px;
+  text-transform:uppercase;color:var(--clay);margin-bottom:4px;display:block
+}
+.sdrive{
+  display:flex;align-items:center;gap:8px;padding:5px 0 5px 18px;margin-bottom:0
+}
+.sdrive-line{flex:1;height:1px;background:var(--border)}
+.sdrive-label{font-size:10px;color:var(--subtle);letter-spacing:.8px;white-space:nowrap}
+
+/* ── LIVE PROGRESS ── */
+.live-wrap{background:var(--warm);border-bottom:1px solid var(--border);padding:20px 20px 16px}
+@media(prefers-color-scheme:dark){.live-wrap{background:#1E1810}}
+.live-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.live-label{font-family:var(--sans);font-size:10px;font-weight:500;text-transform:uppercase;letter-spacing:2px;color:var(--clay)}
+.live-refresh{
+  background:transparent;border:1px solid var(--clay);color:var(--clay);
+  border-radius:6px;padding:5px 12px;font-size:11px;font-weight:500;
+  letter-spacing:.6px;cursor:pointer;font-family:var(--sans);
+  transition:background .15s,color .15s;-webkit-tap-highlight-color:transparent
+}
+.live-refresh:active{background:var(--clay);color:#fff}
+.live-status{font-size:13px;color:var(--muted);text-align:center;padding:14px 0}
+.live-main{display:none}
+.live-row{display:flex;align-items:baseline;gap:8px;margin-bottom:14px}
+.live-mi-num{font-family:var(--font);font-size:48px;font-weight:400;color:var(--text);letter-spacing:-1px;line-height:1}
+.live-mi-unit{font-size:14px;color:var(--muted);letter-spacing:.3px}
+.live-bar-wrap{height:5px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.live-bar{height:100%;background:linear-gradient(90deg,var(--sage) 0%,var(--clay) 100%);border-radius:3px;width:0%;transition:width 1s cubic-bezier(.4,0,.2,1)}
+.live-pct-row{display:flex;justify-content:space-between;font-size:11px;color:var(--muted);letter-spacing:.4px;margin-bottom:12px}
+.live-near{font-size:12px;color:var(--muted);padding-top:10px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center}
+.live-near-loc{flex:1}
+.live-updated{font-size:10px;color:var(--subtle);letter-spacing:.3px;white-space:nowrap;margin-left:8px}
+.live-arrived{font-family:var(--font);font-size:20px;color:var(--sage);text-align:center;padding:8px 0 12px}
 </style>
 </head>
 <body>
@@ -175,6 +211,33 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stat"><span class="stat-n">7</span><span class="stat-l">Charges</span></div>
     <div class="stat"><span class="stat-n">4</span><span class="stat-l">Kids</span></div>
     <div class="stat"><span class="stat-n">2</span><span class="stat-l">Families</span></div>
+  </div>
+</div>
+
+<!-- ════════════ LIVE PROGRESS ════════════ -->
+<div class="live-wrap">
+  <div class="live-header">
+    <span class="live-label">Live Progress</span>
+    <button class="live-refresh" onclick="locateMe()">↻ Update</button>
+  </div>
+  <div id="live-status" class="live-status">Locating…</div>
+  <div id="live-main" class="live-main">
+    <div id="live-arrived" class="live-arrived" style="display:none">You made it! 🎉</div>
+    <div id="live-trip" class="">
+      <div class="live-row">
+        <span class="live-mi-num" id="live-mi">—</span>
+        <span class="live-mi-unit">miles remaining</span>
+      </div>
+      <div class="live-bar-wrap"><div id="live-bar" class="live-bar"></div></div>
+      <div class="live-pct-row">
+        <span id="live-done">—% complete</span>
+        <span id="live-left">—% to go</span>
+      </div>
+      <div class="live-near">
+        <span class="live-near-loc" id="live-near">—</span>
+        <span class="live-updated" id="live-updated"></span>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -333,7 +396,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
   <div class="dh">
     <div class="dh-eyebrow">Day One</div>
     <h2>Chino to Flagstaff</h2>
-    <div class="dh-meta">390 miles · approx. 5.5 hours · 2 charge stops · Overnight Flagstaff, AZ</div>
+    <div class="dh-meta">390 miles · ~7 hours door to door · 2 charge stops · Overnight Flagstaff, AZ</div>
   </div>
 
   <p class="sec">Route</p>
@@ -342,39 +405,49 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-start">⟶</div>
       <div class="sbody">
+        <span class="stime">10:00am · Depart</span>
         <div class="sname">14656 Marist Ln, Chino</div>
-        <div class="sdesc">Depart by 7am. North on I-15, then east on I-40 at Barstow.</div>
+        <div class="sdesc">North on I-15, then east on I-40 at Barstow. ~85 miles to first stop.</div>
         <a class="nbtn" href="https://maps.apple.com/?q=14656+Marist+Ln,Chino,CA+91710&ll=33.9873,-117.6728">Open in Maps</a>
       </div>
     </div>
 
-    <div class="stop">
-      <div class="sdot d-charge">⚡</div>
-      <div class="sbody">
-        <div class="sname">Barstow Supercharger</div>
-        <div class="sdesc">2812 Lenwood Rd, Barstow, CA · 4.3 stars · 50+ stalls</div>
-        <div class="smiles">90 miles from Chino</div>
-        <span class="note">Outlets mall nearby · Good breakfast stop</span>
-        <br><a class="nbtn" href="https://maps.apple.com/?daddr=34.8493,-117.0856&dirflg=d">Navigate</a>
-      </div>
-    </div>
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">1 hr 15 min · 85 mi</div><div class="sdrive-line"></div></div>
 
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
+        <span class="stime">11:15am · 40 min stop</span>
+        <div class="sname">Barstow Supercharger</div>
+        <div class="sdesc">2812 Lenwood Rd, Barstow, CA · 4.3 stars · 50+ stalls</div>
+        <div class="smiles">Charge + snacks · depart 11:55am</div>
+        <span class="note">Outlets mall · Chili's nearby</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?daddr=34.8493,-117.0856&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">2 hr 15 min · 155 mi</div><div class="sdrive-line"></div></div>
+
+    <div class="stop">
+      <div class="sdot d-charge">⚡</div>
+      <div class="sbody">
+        <span class="stime">2:10pm · 45 min stop</span>
         <div class="sname">Kingman Supercharger</div>
         <div class="sdesc">120 W Andy Devine Ave, Kingman, AZ · 4.6 stars · 16 stalls</div>
-        <div class="smiles">240 miles from Chino</div>
+        <div class="smiles">Charge + lunch · depart 2:55pm</div>
         <span class="note">Route 66 Museum lot · Mr D'z Diner nearby</span>
         <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.1894,-114.0588&dirflg=d">Navigate</a>
       </div>
     </div>
 
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">2 hr 10 min · 150 mi</div><div class="sdrive-line"></div></div>
+
     <div class="stop">
       <div class="sdot d-sleep">🌙</div>
       <div class="sbody">
+        <span class="stime">~5:05pm · Arrive</span>
         <div class="sname">Overnight — Flagstaff, AZ</div>
-        <div class="sdesc">Arrive around 1–2pm. Cool mountain town at 7,000 ft. Family hotels throughout.</div>
+        <div class="sdesc">Cool mountain town at 7,000 ft. Dozens of family hotels near I-40. Walnut Canyon (exit 204) is 7 miles east if you want to stop on the way in — closes at 5pm so it's tight.</div>
         <div class="smiles">390 miles · End of day one</div>
         <span class="note">Request suites — 8 people need breathing room</span>
         <br><a class="nbtn" href="https://maps.apple.com/?q=Family+Hotels+Flagstaff+AZ&ll=35.1983,-111.6513">Find Hotels</a>
@@ -383,30 +456,30 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 
   </div>
 
-  <p class="sec">Flagstaff</p>
+  <p class="sec">Flagstaff Evening</p>
   <div class="acts">
-
-    <div class="act">
-      <div class="aemoji">🏛️</div>
-      <div class="aname">Walnut Canyon</div>
-      <div class="adesc">Ancient cliff dwellings built into canyon walls. Exit 204 off I-40 — stop here on the way in. Stroller-friendly rim trail, 1.6 mi hike.</div>
-      <div class="ameta"><span class="arating">4.8</span> · 9am–5pm · $15 per vehicle</div>
-      <a class="nbtn" href="https://maps.apple.com/?q=Walnut+Canyon+National+Monument&ll=35.1690,-111.5043">Maps</a>
-    </div>
 
     <div class="act">
       <div class="aemoji">🔭</div>
       <div class="aname">Lowell Observatory</div>
-      <div class="adesc">Where Pluto was discovered. Kids' hands-on play center, planetarium shows, and five working telescopes to look through.</div>
-      <div class="ameta"><span class="arating">4.7</span> · Opens 1pm · $35 adult</div>
+      <div class="adesc">Where Pluto was discovered. Kids' hands-on play center, planetarium shows, and five working telescopes. Perfect evening activity — open until 11pm.</div>
+      <div class="ameta"><span class="arating">4.7</span> · Open from 1pm · $35 adult</div>
       <a class="nbtn" href="https://maps.apple.com/?q=Lowell+Observatory+Flagstaff&ll=35.2025,-111.6666">Maps</a>
+    </div>
+
+    <div class="act">
+      <div class="aemoji">🏛️</div>
+      <div class="aname">Walnut Canyon</div>
+      <div class="adesc">Ancient cliff dwellings — best saved for Day 2 morning (opens 9am, right off I-40 on your way out). Stroller-friendly rim trail.</div>
+      <div class="ameta"><span class="arating">4.8</span> · 9am–5pm · $15 per vehicle</div>
+      <a class="nbtn" href="https://maps.apple.com/?q=Walnut+Canyon+National+Monument&ll=35.1690,-111.5043">Maps</a>
     </div>
 
   </div>
 
   <p class="sec">Notes</p>
-  <div class="tip">Leave Chino by 7am to arrive in Flagstaff early afternoon — you'll have the entire evening for exploring. Flagstaff has a walkable downtown with great restaurants.</div>
-  <div class="tip">Walnut Canyon is 10 miles east of Flagstaff (exit 204) — stop there on the way into town, then check in, then Lowell Observatory in the evening.</div>
+  <div class="tip">Lowell Observatory is open until 11pm — a great wind-down after checking in. The planetarium shows and telescope viewing are genuinely magical for kids this age.</div>
+  <div class="tip">Walnut Canyon closes at 5pm and you'll arrive around 5pm on Day 1. Save it for Day 2 morning — exit 204 is right on your way out of Flagstaff heading east.</div>
 
 </div>
 
@@ -417,47 +490,85 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
   <div class="dh">
     <div class="dh-eyebrow">Day Two</div>
     <h2>Flagstaff to Amarillo</h2>
-    <div class="dh-meta">450 miles · approx. 6 hours · 3 charge stops · Overnight Amarillo, TX</div>
+    <div class="dh-meta">450 miles · ~10.5 hours with stops · 3 charge stops · Overnight Amarillo, TX</div>
   </div>
 
   <p class="sec">Route</p>
   <div class="stops">
 
     <div class="stop">
+      <div class="sdot d-start">⟶</div>
+      <div class="sbody">
+        <span class="stime">9:00am · Optional</span>
+        <div class="sname">Walnut Canyon National Monument</div>
+        <div class="sdesc">Exit 204 off I-40, 7 miles east of Flagstaff — on your way out. Ancient cliff dwellings, stroller-friendly rim trail. Closes at 5pm, so morning is best.</div>
+        <div class="smiles">Allow 45–60 min · depart by 10:00am</div>
+        <span class="note">$15 per vehicle · skip if slow morning</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?q=Walnut+Canyon+National+Monument&ll=35.1690,-111.5043">Navigate</a>
+      </div>
+    </div>
+
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">In town · 5 min</div><div class="sdrive-line"></div></div>
+
+    <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
+        <span class="stime">10:00am · 20 min stop</span>
         <div class="sname">Flagstaff Supercharger</div>
         <div class="sdesc">US-89, Flagstaff, AZ · 4.6 stars · 24 stalls · Very fast</div>
-        <div class="smiles">First thing in the morning — full charge before NM</div>
+        <div class="smiles">Full charge before New Mexico · depart 10:20am</div>
         <a class="nbtn" href="https://maps.apple.com/?daddr=35.2318,-111.5757&dirflg=d">Navigate</a>
       </div>
     </div>
 
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">2 hr 30 min · 190 mi</div><div class="sdrive-line"></div></div>
+
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
+        <span class="stime">~12:50pm · 30 min stop</span>
         <div class="sname">Gallup Supercharger</div>
         <div class="sdesc">Gallup, NM · 3.9 stars · 8 stalls · Best Western lot</div>
-        <div class="smiles">190 miles from Flagstaff</div>
-        <span class="note warn">Slow chargers — top up just enough to reach Albuquerque</span>
+        <div class="smiles">Bathroom + top up only · depart ~1:20pm</div>
+        <span class="note warn">Slow chargers — just enough to reach Albuquerque</span>
         <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.5053,-108.8281&dirflg=d">Navigate</a>
       </div>
     </div>
 
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">2 hr · 140 mi</div><div class="sdrive-line"></div></div>
+
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
+        <span class="stime">~3:20pm · 90 min stop</span>
         <div class="sname">Albuquerque Supercharger</div>
         <div class="sdesc">2200 Louisiana Blvd NE · 4.6 stars · 16 stalls · 252kW peak</div>
-        <div class="smiles">325 miles from Flagstaff</div>
-        <span class="note">Uptown Mall — Target, Trader Joe's, lunch options · Full charge here</span>
+        <div class="smiles">Full charge + lunch + Explora Science Center nearby · depart ~4:50pm</div>
+        <span class="note">Uptown Mall — Target, Trader Joe's, restaurants</span>
         <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.1043,-106.5658&dirflg=d">Navigate</a>
       </div>
     </div>
 
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">4 hr 10 min · 290 mi</div><div class="sdrive-line"></div></div>
+
+    <div class="stop">
+      <div class="sdot d-charge">⚡</div>
+      <div class="sbody">
+        <span class="stime">~7:00pm · 15 min stop</span>
+        <div class="sname">Cadillac Ranch</div>
+        <div class="sdesc">Right off I-40 frontage road — zero detour. Ten half-buried Cadillacs, free to spray-paint. Buy a can at the shop on the frontage road.</div>
+        <div class="smiles">15 min · depart ~7:15pm</div>
+        <span class="note">Open 24/7 · Free</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.1872,-101.9870&dirflg=d">Navigate</a>
+      </div>
+    </div>
+
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">15 min · 8 mi</div><div class="sdrive-line"></div></div>
+
     <div class="stop">
       <div class="sdot d-sleep">🌙</div>
       <div class="sbody">
+        <span class="stime">~7:30pm · Arrive</span>
         <div class="sname">Home2 Suites, Amarillo</div>
         <div class="sdesc">8251 W Amarillo Blvd · 4.4 stars · Pool, hot tub, free breakfast</div>
         <div class="smiles">450 miles · End of day two</div>
@@ -467,13 +578,13 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 
   </div>
 
-  <p class="sec">Along the Way</p>
+  <p class="sec">In Albuquerque (~3:20pm)</p>
   <div class="acts">
 
     <div class="act">
       <div class="aemoji">🔬</div>
       <div class="aname">Explora Science Center</div>
-      <div class="adesc">Exceptional hands-on science museum in Albuquerque. Designed for ages 2–10. Charge the Tesla while you explore — perfectly timed.</div>
+      <div class="adesc">Exceptional hands-on science museum 5 min from the charger. Designed for ages 2–10. Charge the Tesla while you explore — perfectly timed. Allow 45–60 min.</div>
       <div class="ameta"><span class="arating">4.8</span> · 10am–5pm · ~$15 · Albuquerque</div>
       <a class="nbtn" href="https://maps.apple.com/?q=Explora+Science+Center+Albuquerque&ll=35.0973,-106.6642">Maps</a>
     </div>
@@ -481,33 +592,16 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="act">
       <div class="aemoji">🦒</div>
       <div class="aname">ABQ BioPark Zoo</div>
-      <div class="adesc">Zoo and aquarium combo. Giraffes, zebras, a baby hippo, and peacocks roaming free throughout.</div>
+      <div class="adesc">Zoo and aquarium combo — better if you arrive earlier. Closes at 5pm, so only viable if you skip Walnut Canyon in the morning.</div>
       <div class="ameta"><span class="arating">4.5</span> · 9am–5pm · $15 · Albuquerque</div>
       <a class="nbtn" href="https://maps.apple.com/?q=ABQ+BioPark+Zoo+Albuquerque&ll=35.0771,-106.6606">Maps</a>
-    </div>
-
-    <div class="act">
-      <div class="aemoji">🚗</div>
-      <div class="aname">Cadillac Ranch</div>
-      <div class="adesc">Ten Cadillacs buried nose-first in a field — free to visit, free to spray-paint. Right off I-40, no detour required.</div>
-      <div class="ameta"><span class="arating">4.4</span> · Open 24/7 · Free · Amarillo</div>
-      <a class="nbtn" href="https://maps.apple.com/?q=Cadillac+Ranch+Amarillo+TX&ll=35.1872,-101.9870">Maps</a>
-    </div>
-
-    <div class="act">
-      <div class="aemoji">🏜️</div>
-      <div class="aname">Palo Duro Canyon</div>
-      <div class="adesc">The "Grand Canyon of Texas." Dramatic red canyon walls, 30 minutes south of Amarillo. Easy trails for all ages.</div>
-      <div class="ameta"><span class="arating">4.8</span> · 7:30am–10pm · $8 · Canyon, TX</div>
-      <a class="nbtn" href="https://maps.apple.com/?q=Palo+Duro+Canyon+State+Park&ll=34.9373,-101.6589">Maps</a>
     </div>
 
   </div>
 
   <p class="sec">Notes</p>
-  <div class="tip">Choose one activity in Albuquerque — Explora or the Zoo. There isn't time for both and still reach Amarillo before dark. For ages 2–6, Explora is the better fit.</div>
-  <div class="tip">Pick up a can of spray paint before the Cadillac Ranch exit — there's a shop on the I-40 frontage road right near the turnoff.</div>
-  <div class="tip">The Gallup charger has consistently poor reviews for speed. Don't rely on it for a full charge — just enough to comfortably reach Albuquerque.</div>
+  <div class="tip">Day 2 is the longest day. Arriving around 7:30pm is totally fine — Cadillac Ranch is a quick fun stop right on the way and the kids will love it.</div>
+  <div class="tip">The Gallup charger is slow — reviews warn about it consistently. Just top up enough to reach Albuquerque comfortably, then charge fully there.</div>
 
 </div>
 
@@ -518,60 +612,70 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
   <div class="dh">
     <div class="dh-eyebrow">Day Three</div>
     <h2>Amarillo to Shawnee</h2>
-    <div class="dh-meta">290 miles · approx. 4 hours · 2 charge stops · You're home</div>
+    <div class="dh-meta">290 miles · ~5 hours with stops · 2 charge stops · Welcome home</div>
   </div>
 
   <p class="sec">Route</p>
   <div class="stops">
 
     <div class="stop">
+      <div class="sdot d-start">⟶</div>
+      <div class="sbody">
+        <span class="stime">9:00am · Optional</span>
+        <div class="sname">Palo Duro Canyon</div>
+        <div class="sdesc">30 min south of Amarillo — the "Grand Canyon of Texas." Open at 7:30am. Even a 45-min scenic drive through the canyon is extraordinary. Back in Amarillo by 10am.</div>
+        <div class="smiles">Allow 1.5–2 hrs total · depart by 10:00am</div>
+        <span class="note">$8 adult · 4.8 stars with 10,000+ reviews</span>
+        <br><a class="nbtn" href="https://maps.apple.com/?q=Palo+Duro+Canyon+State+Park&ll=34.9373,-101.6589">Navigate</a>
+      </div>
+    </div>
+
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">In town · 5 min</div><div class="sdrive-line"></div></div>
+
+    <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
+        <span class="stime">10:00am · 30 min stop</span>
         <div class="sname">Amarillo Supercharger</div>
         <div class="sdesc">E I-40 Hwy, Amarillo · 4.6 stars · 12 stalls</div>
-        <div class="smiles">Charge before Oklahoma</div>
-        <span class="note">Texas BBQ and a small kids' playground on site</span>
+        <div class="smiles">Breakfast + kids' playground on site · depart 10:30am</div>
+        <span class="note">Mitch's Texas BBQ · Wendy's on site</span>
         <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.1933,-101.7446&dirflg=d">Navigate</a>
       </div>
     </div>
 
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">3 hr 45 min · 260 mi</div><div class="sdrive-line"></div></div>
+
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
+        <span class="stime">~2:15pm · 25 min stop</span>
         <div class="sname">OKC Supercharger</div>
         <div class="sdesc">7624 W Reno Ave, Oklahoma City · 4.2 stars · 8 stalls</div>
-        <div class="smiles">260 miles from Amarillo</div>
-        <span class="note">OKC Outlets · Last charge of the entire trip</span>
+        <div class="smiles">Lunch at OKC Outlets · last charge of the trip · depart 2:40pm</div>
+        <span class="note">BJ's Brewhouse next door</span>
         <br><a class="nbtn" href="https://maps.apple.com/?daddr=35.4617,-97.6514&dirflg=d">Navigate</a>
       </div>
     </div>
 
+    <div class="sdrive"><div class="sdrive-line"></div><div class="sdrive-label">30 min · 35 mi</div><div class="sdrive-line"></div></div>
+
     <div class="stop">
       <div class="sdot d-end">⌂</div>
       <div class="sbody">
+        <span class="stime">~3:10pm · Arrive</span>
         <div class="sname">213 Hope Ave, Shawnee OK</div>
-        <div class="sdesc">35 miles east of Oklahoma City on I-40. A new chapter begins here.</div>
-        <div class="smiles">290 miles · Journey complete</div>
+        <div class="sdesc">A new chapter begins here. 1,340 miles from where you started.</div>
+        <div class="smiles">Journey complete</div>
         <a class="nbtn" href="https://maps.apple.com/?q=213+Hope+Ave,Shawnee,OK+74804&ll=35.4029,-96.8877">Open in Maps</a>
       </div>
     </div>
 
   </div>
 
-  <p class="sec">Optional Morning</p>
-  <div class="acts">
-    <div class="act act-full">
-      <div class="aemoji">🏜️</div>
-      <div class="aname">Palo Duro Canyon</div>
-      <div class="adesc">Open at 7:30am, 30 minutes south of Amarillo. Even a short drive through the canyon is worth the stop — the scale and color of the rock is extraordinary. Back on I-40 by 10am, still arriving in Shawnee early afternoon.</div>
-      <div class="ameta"><span class="arating">4.8</span> · 10,000+ reviews · 7:30am–10pm · $8 adult · Canyon, TX</div>
-      <a class="nbtn" href="https://maps.apple.com/?q=Palo+Duro+Canyon+State+Park&ll=34.9373,-101.6589">Navigate</a>
-    </div>
-  </div>
-
   <p class="sec">Notes</p>
-  <div class="tip">The easiest day of the trip — only 290 miles. There's no reason to rush. Sleep in, enjoy the hotel breakfast, take your time. You'll still arrive in Shawnee early afternoon.</div>
-  <div class="tip">If you visit Palo Duro Canyon, go before 9am. The canyon is cooler in the morning and the light is beautiful. Even the scenic drive without hiking takes only 30 minutes.</div>
+  <div class="tip">The easiest day of the trip — only 290 miles. Sleep in, enjoy the hotel's free breakfast. With or without Palo Duro Canyon, you're in Shawnee by mid-afternoon.</div>
+  <div class="tip">If you do Palo Duro Canyon, the scenic drive alone takes 30–40 minutes and requires no hiking. The red canyon walls are genuinely stunning — worth the slight morning push.</div>
 
 </div>
 
@@ -585,6 +689,99 @@ function go(i){
   document.querySelectorAll('.panel').forEach(function(p,j){p.classList.toggle('on',j===i)});
   window.scrollTo({top:0,behavior:'smooth'});
 }
+
+/* ── ROUTE WAYPOINTS with cumulative road miles ── */
+var WP = [
+  { name:'Chino, CA',               lat:33.9873, lon:-117.6728, mi:0    },
+  { name:'Barstow Supercharger',     lat:34.8493, lon:-117.0856, mi:85   },
+  { name:'Kingman Supercharger',     lat:35.1894, lon:-114.0588, mi:240  },
+  { name:'Flagstaff, AZ',           lat:35.1983, lon:-111.6513, mi:390  },
+  { name:'Flagstaff Supercharger',  lat:35.2318, lon:-111.5757, mi:393  },
+  { name:'Gallup Supercharger',     lat:35.5053, lon:-108.8281, mi:583  },
+  { name:'Albuquerque Supercharger',lat:35.1043, lon:-106.5658, mi:723  },
+  { name:'Cadillac Ranch',          lat:35.1872, lon:-101.9870, mi:1013 },
+  { name:'Amarillo, TX',            lat:35.1909, lon:-101.9310, mi:1021 },
+  { name:'Amarillo Supercharger',   lat:35.1933, lon:-101.7446, mi:1050 },
+  { name:'OKC Supercharger',        lat:35.4617, lon: -97.6514, mi:1305 },
+  { name:'Shawnee, OK',             lat:35.4029, lon: -96.8877, mi:1340 }
+];
+var TOTAL = 1340;
+
+function haversine(a1,o1,a2,o2){
+  var R=3958.8, r=Math.PI/180;
+  var da=(a2-a1)*r, do2=(o2-o1)*r;
+  var s=Math.sin(da/2)**2+Math.cos(a1*r)*Math.cos(a2*r)*Math.sin(do2/2)**2;
+  return R*2*Math.atan2(Math.sqrt(s),Math.sqrt(1-s));
+}
+
+function clamp01(t){ return t<0?0:t>1?1:t; }
+
+function calcProgress(lat,lon){
+  var best={dist:Infinity,seg:0,t:0};
+  for(var i=0;i<WP.length-1;i++){
+    var A=WP[i],B=WP[i+1];
+    var dx=B.lon-A.lon, dy=B.lat-A.lat;
+    var t2=(dx||dy)?clamp01(((lon-A.lon)*dx+(lat-A.lat)*dy)/(dx*dx+dy*dy)):0;
+    var pl=A.lat+t2*(B.lat-A.lat), po=A.lon+t2*(B.lon-A.lon);
+    var d=haversine(lat,lon,pl,po);
+    if(d<best.dist){best={dist:d,seg:i,t:t2};}
+  }
+  var A=WP[best.seg],B=WP[best.seg+1];
+  var miDone=A.mi+best.t*(B.mi-A.mi);
+  var miLeft=Math.max(0,TOTAL-miDone);
+  var pctDone=Math.min(100,(miDone/TOTAL)*100);
+
+  var near;
+  if(best.t<0.25)       near='Near '+A.name;
+  else if(best.t>0.75)  near='Approaching '+B.name;
+  else                   near='Between '+A.name+' → '+B.name;
+
+  return {miLeft:miLeft,pctDone:pctDone,near:near};
+}
+
+function showProgress(lat,lon){
+  var r=calcProgress(lat,lon);
+  var st=document.getElementById('live-status');
+  var mn=document.getElementById('live-main');
+  var arrived=document.getElementById('live-arrived');
+  var trip=document.getElementById('live-trip');
+  st.style.display='none';
+  mn.style.display='block';
+
+  if(r.miLeft<1){
+    arrived.style.display='block';
+    trip.style.display='none';
+    return;
+  }
+  arrived.style.display='none';
+  trip.style.display='block';
+
+  document.getElementById('live-mi').textContent=Math.round(r.miLeft).toLocaleString();
+  document.getElementById('live-bar').style.width=r.pctDone.toFixed(1)+'%';
+  document.getElementById('live-done').textContent=r.pctDone.toFixed(1)+'% complete';
+  document.getElementById('live-left').textContent=(100-r.pctDone).toFixed(1)+'% to go';
+  document.getElementById('live-near').textContent=r.near;
+  document.getElementById('live-updated').textContent='Updated '+new Date().toLocaleTimeString([],{hour:'2-digit',minute:'2-digit'});
+}
+
+function setStatus(msg){
+  document.getElementById('live-status').style.display='block';
+  document.getElementById('live-status').textContent=msg;
+  document.getElementById('live-main').style.display='none';
+}
+
+function locateMe(){
+  if(!navigator.geolocation){setStatus('Geolocation not supported.');return;}
+  setStatus('Locating…');
+  navigator.geolocation.getCurrentPosition(
+    function(p){showProgress(p.coords.latitude,p.coords.longitude);},
+    function(){setStatus('Could not get location — tap Update to retry.');},
+    {enableHighAccuracy:true,timeout:12000,maximumAge:30000}
+  );
+}
+
+window.addEventListener('load',locateMe);
+setInterval(locateMe,60000);
 </script>
 </body>
 </html>
