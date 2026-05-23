@@ -17,7 +17,7 @@
   --bg:#18140F;--card:#221C16;--text:#F0EBE4;--muted:#9A8878;--border:#362E26;--warm:#2A2018
 }}
 html{scroll-behavior:smooth}
-body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;max-width:500px;margin:0 auto;min-height:100vh}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font-smoothing:antialiased;min-height:100vh}
 
 /* ── HERO ── */
 .hero{
@@ -47,16 +47,17 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 /* ── TABS ── */
 .tabs{
   display:flex;background:var(--card);border-bottom:1px solid var(--border);
-  position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch
+  position:sticky;top:0;z-index:100;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+  padding:6px;gap:3px
 }
 .tabs::-webkit-scrollbar{display:none}
 .tab{
-  flex:1;min-width:72px;padding:14px 4px;text-align:center;
-  font-family:var(--sans);font-size:12px;font-weight:400;letter-spacing:.6px;text-transform:uppercase;
-  color:var(--muted);border-bottom:1px solid transparent;margin-bottom:-1px;
-  cursor:pointer;white-space:nowrap;transition:color .2s,border-color .2s;user-select:none
+  flex:1;min-width:72px;padding:8px 4px;text-align:center;
+  font-family:var(--sans);font-size:12px;font-weight:500;letter-spacing:.6px;text-transform:uppercase;
+  color:var(--muted);border-radius:7px;
+  cursor:pointer;white-space:nowrap;transition:color .15s,background .15s,font-weight .15s;user-select:none
 }
-.tab.on{color:var(--clay);border-bottom-color:var(--clay)}
+.tab.on{background:var(--clay);color:#fff;font-weight:700}
 
 /* ── PANELS ── */
 .panel{display:none;padding-bottom:70px}
@@ -162,7 +163,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 
 /* ── TIME STAMP ── */
 .stime{
-  font-family:var(--sans);font-size:10px;font-weight:600;letter-spacing:1.2px;
+  font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:1px;
   text-transform:uppercase;color:var(--clay);margin-bottom:4px;display:block
 }
 .sdrive{
@@ -170,6 +171,25 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 }
 .sdrive-line{flex:1;height:1px;background:var(--border)}
 .sdrive-label{font-size:10px;color:var(--subtle);letter-spacing:.8px;white-space:nowrap}
+
+/* ── EDITABLE TIMES ── */
+.depart-btn{
+  display:inline-flex;align-items:center;gap:3px;cursor:pointer;
+  color:var(--clay);border-bottom:1px dashed var(--clay);
+  line-height:1.4;padding-bottom:1px;
+  -webkit-tap-highlight-color:transparent;transition:opacity .15s
+}
+.depart-btn:active{opacity:.5}
+.depart-pen{font-size:8px;opacity:.4;margin-left:1px}
+.depart-input{
+  border:none;outline:1.5px solid var(--clay);border-radius:4px;
+  padding:2px 5px;font-family:var(--sans);font-size:11px;font-weight:600;
+  color:var(--clay);background:var(--warm);letter-spacing:.5px;
+  -webkit-appearance:none;text-transform:uppercase
+}
+@media(prefers-color-scheme:dark){
+  .depart-input{background:#2A2018;color:var(--clay)}
+}
 
 /* ── LIVE PROGRESS ── */
 .live-wrap{background:var(--warm);border-bottom:1px solid var(--border);padding:20px 20px 16px}
@@ -195,6 +215,80 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 .live-near-loc{flex:1}
 .live-updated{font-size:10px;color:var(--subtle);letter-spacing:.3px;white-space:nowrap;margin-left:8px}
 .live-arrived{font-family:var(--font);font-size:20px;color:var(--sage);text-align:center;padding:8px 0 12px}
+
+/* ── STOP EDITING ── */
+.stop.skipped{opacity:.38}
+.stop.skipped .sname{text-decoration:line-through}
+.stop.custom-stop{border-left:3px solid var(--sage)}
+
+/* ── ACTUAL TIME LOG ── */
+.actual-wrap{margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.actual-chip{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--clay)}
+.actual-time-val{font-weight:700}
+.actual-delta{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;white-space:nowrap}
+.actual-delta.late{background:#3A1A1A;color:#E08070}
+.actual-delta.early{background:#1A2E1A;color:#70C070}
+.actual-delta.ontime{color:var(--muted)}
+.actual-edit-btn{font-size:10px;color:var(--subtle);background:none;border:none;cursor:pointer;padding:0 2px;font-family:var(--sans);opacity:.7;-webkit-tap-highlight-color:transparent}
+.actual-entry{display:flex;gap:6px;align-items:center;margin-top:6px;flex-wrap:wrap}
+.actual-entry input[type=time]{
+  border:1px solid var(--border);border-radius:6px;padding:6px 9px;
+  font-size:13px;font-family:var(--sans);color:var(--text);background:var(--bg);outline:none
+}
+.actual-entry input[type=time]:focus{border-color:var(--clay)}
+.actual-save-btn{
+  padding:6px 12px;border-radius:6px;background:var(--clay);color:#fff;
+  font-size:10px;font-weight:600;letter-spacing:.5px;text-transform:uppercase;
+  border:none;cursor:pointer;font-family:var(--sans);-webkit-tap-highlight-color:transparent
+}
+.actual-clear-btn{font-size:10px;color:var(--subtle);background:none;border:none;cursor:pointer;padding:0 4px;font-family:var(--sans);-webkit-tap-highlight-color:transparent}
+@media(prefers-color-scheme:dark){.actual-entry input[type=time]{background:var(--card)}}
+
+.stop-ctrl{display:flex;gap:8px;margin-top:10px;padding-top:10px;border-top:1px solid var(--border)}
+.stop-ctrl-btn{
+  font-size:10px;font-weight:500;letter-spacing:.8px;text-transform:uppercase;
+  padding:5px 12px;border-radius:5px;cursor:pointer;background:transparent;
+  border:1px solid var(--border);color:var(--muted);font-family:var(--sans);
+  -webkit-tap-highlight-color:transparent;transition:background .15s,color .15s
+}
+.stop-ctrl-btn:active{background:var(--clay);color:#fff;border-color:var(--clay)}
+.stop-ctrl-btn.danger{color:#A04848;border-color:#C87878}
+.stop-ctrl-btn.danger:active{background:#A04848;border-color:#A04848;color:#fff}
+
+.add-break-wrap{padding:4px 16px}
+.add-break-btn{
+  width:100%;padding:9px;border:1px dashed var(--border);border-radius:8px;
+  background:transparent;color:var(--subtle);font-size:10px;letter-spacing:1.5px;
+  text-transform:uppercase;cursor:pointer;font-family:var(--sans);
+  transition:border-color .15s,color .15s;-webkit-tap-highlight-color:transparent
+}
+.add-break-btn:active{border-color:var(--clay);color:var(--clay)}
+
+.add-break-form{
+  background:var(--card);border-radius:var(--r);padding:14px;
+  border:1px solid var(--clay);margin-top:6px
+}
+.abf-label{font-size:10px;font-weight:600;letter-spacing:1.5px;text-transform:uppercase;color:var(--clay);margin-bottom:10px}
+.abf-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.abf-name,.abf-dur{
+  border:1px solid var(--border);border-radius:6px;padding:8px 10px;
+  font-size:13px;font-family:var(--sans);color:var(--text);background:var(--bg);outline:none
+}
+.abf-name{flex:1;min-width:130px}
+.abf-dur{width:65px}
+.abf-name:focus,.abf-dur:focus,.abf-addr:focus,.abf-notes:focus{border-color:var(--clay)}
+.abf-addr,.abf-notes{
+  border:1px solid var(--border);border-radius:6px;padding:8px 10px;
+  font-size:13px;font-family:var(--sans);color:var(--text);background:var(--bg);
+  outline:none;width:100%;box-sizing:border-box;margin-top:8px
+}
+.abf-submit{
+  padding:8px 14px;border-radius:6px;background:var(--clay);color:#fff;
+  font-size:11px;font-weight:600;letter-spacing:.8px;text-transform:uppercase;
+  border:none;cursor:pointer;font-family:var(--sans);-webkit-tap-highlight-color:transparent
+}
+.abf-cancel{padding:8px;border-radius:6px;background:transparent;color:var(--muted);font-size:14px;border:none;cursor:pointer}
+@media(prefers-color-scheme:dark){.abf-name,.abf-dur,.abf-addr,.abf-notes{background:var(--card)}}
 </style>
 </head>
 <body>
@@ -244,51 +338,34 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 <!-- ════════════ ROUTE MAP ════════════ -->
 <div class="map-wrap">
 <svg id="rmap" viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg">
-  <!-- State labels -->
   <text x="78"  y="160" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">CA</text>
   <text x="235" y="100" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">AZ</text>
   <text x="440" y="148" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">NM</text>
   <text x="645" y="150" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">TX</text>
   <text x="815" y="116" font-family="-apple-system,sans-serif" font-size="11" fill="#B4A090" font-weight="400" text-anchor="middle" letter-spacing="1">OK</text>
-
-  <!-- State dividers — very faint -->
   <line x1="128" y1="60" x2="142" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
   <line x1="355" y1="60" x2="360" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
   <line x1="555" y1="60" x2="560" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
   <line x1="757" y1="60" x2="760" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
-
-  <!-- Route — Day 1 (warm clay) -->
   <path d="M62,150 C70,135 78,122 86,118 L197,107 L289,106"
         stroke="#A0694A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Route — Day 2 (dusty stone) -->
   <path d="M289,106 L391,92 L475,111 L648,107"
         stroke="#B8A080" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-  <!-- Route — Day 3 (muted sage) -->
   <path d="M648,107 L807,94 L838,97"
         stroke="#7A9480" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-
-  <!-- Charge stops -->
   <circle cx="86"  cy="118" r="3.5" fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
   <circle cx="197" cy="107" r="3.5" fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
   <circle cx="391" cy="92"  r="3.5" fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
   <circle cx="475" cy="111" r="4"   fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
   <circle cx="807" cy="94"  r="3.5" fill="#C4A882" stroke="#EDE6DC" stroke-width="1.5"/>
-
-  <!-- Overnight stops -->
   <circle cx="289" cy="106" r="6.5" fill="#A0694A" stroke="#EDE6DC" stroke-width="1.5"/>
   <circle cx="648" cy="107" r="6.5" fill="#A0694A" stroke="#EDE6DC" stroke-width="1.5"/>
-
-  <!-- Start / End -->
   <circle cx="62"  cy="150" r="6"   fill="#7A9480" stroke="#EDE6DC" stroke-width="1.5"/>
   <circle cx="838" cy="97"  r="6"   fill="#A04848" stroke="#EDE6DC" stroke-width="1.5"/>
-
-  <!-- Labels — minimal -->
   <text x="62"  y="165" font-family="-apple-system,sans-serif" font-size="8.5" fill="#7A9480" font-weight="500" text-anchor="middle" letter-spacing=".5">Chino</text>
   <text x="289" y="97"  font-family="-apple-system,sans-serif" font-size="8.5" fill="#A0694A" font-weight="500" text-anchor="middle" letter-spacing=".5">Flagstaff</text>
   <text x="648" y="98"  font-family="-apple-system,sans-serif" font-size="8.5" fill="#A0694A" font-weight="500" text-anchor="middle" letter-spacing=".5">Amarillo</text>
   <text x="838" y="87"  font-family="-apple-system,sans-serif" font-size="8.5" fill="#A04848" font-weight="500" text-anchor="middle" letter-spacing=".5">Shawnee</text>
-
-  <!-- Legend — quiet -->
   <circle cx="28" cy="18" r="4" fill="#7A9480"/>
   <text x="37" y="22" font-family="-apple-system,sans-serif" font-size="9" fill="#B4A090" letter-spacing=".5">Start / End</text>
   <circle cx="106" cy="18" r="4" fill="#A0694A"/>
@@ -405,7 +482,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-start">⟶</div>
       <div class="sbody">
-        <span class="stime">10:00am · Depart</span>
+        <span class="stime" data-stop-id="d1-0">10:00am · Depart</span>
         <div class="sname">14656 Marist Ln, Chino</div>
         <div class="sdesc">North on I-15, then east on I-40 at Barstow. ~85 miles to first stop.</div>
         <a class="nbtn" href="https://maps.apple.com/?q=14656+Marist+Ln,Chino,CA+91710&ll=33.9873,-117.6728">Open in Maps</a>
@@ -417,7 +494,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
-        <span class="stime">11:15am · 40 min stop</span>
+        <span class="stime" data-stop-id="d1-1">11:15am · 40 min stop</span>
         <div class="sname">Barstow Supercharger</div>
         <div class="sdesc">2812 Lenwood Rd, Barstow, CA · 4.3 stars · 50+ stalls</div>
         <div class="smiles">Charge + snacks · depart 11:55am</div>
@@ -431,7 +508,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
-        <span class="stime">2:10pm · 45 min stop</span>
+        <span class="stime" data-stop-id="d1-2">2:10pm · 45 min stop</span>
         <div class="sname">Kingman Supercharger</div>
         <div class="sdesc">120 W Andy Devine Ave, Kingman, AZ · 4.6 stars · 16 stalls</div>
         <div class="smiles">Charge + lunch · depart 2:55pm</div>
@@ -445,7 +522,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-sleep">🌙</div>
       <div class="sbody">
-        <span class="stime">~5:05pm · Arrive</span>
+        <span class="stime" data-stop-id="d1-3">~5:05pm · Arrive</span>
         <div class="sname">Overnight — Flagstaff, AZ</div>
         <div class="sdesc">Cool mountain town at 7,000 ft. Dozens of family hotels near I-40. Walnut Canyon (exit 204) is 7 miles east if you want to stop on the way in — closes at 5pm so it's tight.</div>
         <div class="smiles">390 miles · End of day one</div>
@@ -499,7 +576,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-start">⟶</div>
       <div class="sbody">
-        <span class="stime">9:00am · Optional</span>
+        <span class="stime" data-stop-id="d2-0">9:00am · Optional</span>
         <div class="sname">Walnut Canyon National Monument</div>
         <div class="sdesc">Exit 204 off I-40, 7 miles east of Flagstaff — on your way out. Ancient cliff dwellings, stroller-friendly rim trail. Closes at 5pm, so morning is best.</div>
         <div class="smiles">Allow 45–60 min · depart by 10:00am</div>
@@ -513,7 +590,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
-        <span class="stime">10:00am · 20 min stop</span>
+        <span class="stime" data-stop-id="d2-1">10:00am · 20 min stop</span>
         <div class="sname">Flagstaff Supercharger</div>
         <div class="sdesc">US-89, Flagstaff, AZ · 4.6 stars · 24 stalls · Very fast</div>
         <div class="smiles">Full charge before New Mexico · depart 10:20am</div>
@@ -526,7 +603,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
-        <span class="stime">~12:50pm · 30 min stop</span>
+        <span class="stime" data-stop-id="d2-2">~12:50pm · 30 min stop</span>
         <div class="sname">Gallup Supercharger</div>
         <div class="sdesc">Gallup, NM · 3.9 stars · 8 stalls · Best Western lot</div>
         <div class="smiles">Bathroom + top up only · depart ~1:20pm</div>
@@ -540,7 +617,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
-        <span class="stime">~3:20pm · 90 min stop</span>
+        <span class="stime" data-stop-id="d2-3">~3:20pm · 90 min stop</span>
         <div class="sname">Albuquerque Supercharger</div>
         <div class="sdesc">2200 Louisiana Blvd NE · 4.6 stars · 16 stalls · 252kW peak</div>
         <div class="smiles">Full charge + lunch + Explora Science Center nearby · depart ~4:50pm</div>
@@ -554,7 +631,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
-        <span class="stime">~7:00pm · 15 min stop</span>
+        <span class="stime" data-stop-id="d2-4">~7:00pm · 15 min stop</span>
         <div class="sname">Cadillac Ranch</div>
         <div class="sdesc">Right off I-40 frontage road — zero detour. Ten half-buried Cadillacs, free to spray-paint. Buy a can at the shop on the frontage road.</div>
         <div class="smiles">15 min · depart ~7:15pm</div>
@@ -568,7 +645,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-sleep">🌙</div>
       <div class="sbody">
-        <span class="stime">~7:30pm · Arrive</span>
+        <span class="stime" data-stop-id="d2-5">~7:30pm · Arrive</span>
         <div class="sname">Home2 Suites, Amarillo</div>
         <div class="sdesc">8251 W Amarillo Blvd · 4.4 stars · Pool, hot tub, free breakfast</div>
         <div class="smiles">450 miles · End of day two</div>
@@ -621,7 +698,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-start">⟶</div>
       <div class="sbody">
-        <span class="stime">9:00am · Optional</span>
+        <span class="stime" data-stop-id="d3-0">9:00am · Optional</span>
         <div class="sname">Palo Duro Canyon</div>
         <div class="sdesc">30 min south of Amarillo — the "Grand Canyon of Texas." Open at 7:30am. Even a 45-min scenic drive through the canyon is extraordinary. Back in Amarillo by 10am.</div>
         <div class="smiles">Allow 1.5–2 hrs total · depart by 10:00am</div>
@@ -635,7 +712,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
-        <span class="stime">10:00am · 30 min stop</span>
+        <span class="stime" data-stop-id="d3-1">10:00am · 30 min stop</span>
         <div class="sname">Amarillo Supercharger</div>
         <div class="sdesc">E I-40 Hwy, Amarillo · 4.6 stars · 12 stalls</div>
         <div class="smiles">Breakfast + kids' playground on site · depart 10:30am</div>
@@ -649,7 +726,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-charge">⚡</div>
       <div class="sbody">
-        <span class="stime">~2:15pm · 25 min stop</span>
+        <span class="stime" data-stop-id="d3-2">~2:15pm · 25 min stop</span>
         <div class="sname">OKC Supercharger</div>
         <div class="sdesc">7624 W Reno Ave, Oklahoma City · 4.2 stars · 8 stalls</div>
         <div class="smiles">Lunch at OKC Outlets · last charge of the trip · depart 2:40pm</div>
@@ -663,7 +740,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
     <div class="stop">
       <div class="sdot d-end">⌂</div>
       <div class="sbody">
-        <span class="stime">~3:10pm · Arrive</span>
+        <span class="stime" data-stop-id="d3-3">~3:10pm · Arrive</span>
         <div class="sname">213 Hope Ave, Shawnee OK</div>
         <div class="sdesc">A new chapter begins here. 1,340 miles from where you started.</div>
         <div class="smiles">Journey complete</div>
@@ -684,6 +761,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 </div>
 
 <script>
+/* ── TAB NAVIGATION ── */
 function go(i){
   document.querySelectorAll('.tab').forEach(function(t,j){t.classList.toggle('on',j===i)});
   document.querySelectorAll('.panel').forEach(function(p,j){p.classList.toggle('on',j===i)});
@@ -782,6 +860,598 @@ function locateMe(){
 
 window.addEventListener('load',locateMe);
 setInterval(locateMe,60000);
+
+/* ══════════════════════════════════════════
+   EDITABLE DEPARTURE TIMES
+   ══════════════════════════════════════════
+   Each stop stores:
+     arrive   — minutes since midnight, calculated from prev depart + driveMin
+     depart   — minutes since midnight, editable (arrive + stopMin by default)
+     stopMin  — duration of the stop in minutes (fixed)
+     driveMin — drive time to the NEXT stop in minutes (fixed)
+     type     — 'start' | 'mid' | 'end'
+     optional — true for optional first-stop activities
+*/
+var DAY_ORDER = {
+  1: ['d1-0','d1-1','d1-2','d1-3'],
+  2: ['d2-0','d2-1','d2-2','d2-3','d2-4','d2-5'],
+  3: ['d3-0','d3-1','d3-2','d3-3']
+};
+
+var STOPS = {
+  /* Day 1 */
+  'd1-0':{day:1,idx:0,type:'start',             stopMin:0,  driveMin:75,  driveMi:85,  depart:600,  arrive:null},
+  'd1-1':{day:1,idx:1,type:'mid',               stopMin:40, driveMin:135, driveMi:155, depart:715,  arrive:675 },
+  'd1-2':{day:1,idx:2,type:'mid',               stopMin:45, driveMin:130, driveMi:150, depart:895,  arrive:850 },
+  'd1-3':{day:1,idx:3,type:'end',               stopMin:0,  driveMin:0,   driveMi:0,   depart:null, arrive:1025},
+  /* Day 2 */
+  'd2-0':{day:2,idx:0,type:'start',optional:true,stopMin:60,driveMin:0,   driveMi:0,   depart:600,  arrive:null},
+  'd2-1':{day:2,idx:1,type:'mid',               stopMin:20, driveMin:150, driveMi:190, depart:620,  arrive:600 },
+  'd2-2':{day:2,idx:2,type:'mid',               stopMin:30, driveMin:120, driveMi:140, depart:800,  arrive:770 },
+  'd2-3':{day:2,idx:3,type:'mid',               stopMin:90, driveMin:130, driveMi:290, depart:1010, arrive:920 },
+  'd2-4':{day:2,idx:4,type:'mid',               stopMin:15, driveMin:15,  driveMi:8,   depart:1155, arrive:1140},
+  'd2-5':{day:2,idx:5,type:'end',               stopMin:0,  driveMin:0,   driveMi:0,   depart:null, arrive:1170},
+  /* Day 3 */
+  'd3-0':{day:3,idx:0,type:'start',optional:true,stopMin:60,driveMin:0,   driveMi:0,   depart:600,  arrive:null},
+  'd3-1':{day:3,idx:1,type:'mid',               stopMin:30, driveMin:225, driveMi:260, depart:630,  arrive:600 },
+  'd3-2':{day:3,idx:2,type:'mid',               stopMin:25, driveMin:30,  driveMi:35,  depart:880,  arrive:855 },
+  'd3-3':{day:3,idx:3,type:'end',               stopMin:0,  driveMin:0,   driveMi:0,   depart:null, arrive:910 }
+};
+
+/* Format minutes-since-midnight as "h:mm am/pm" */
+function fmtMin(m){
+  var h=Math.floor(m/60)%24, mn=m%60;
+  var ap=h>=12?'pm':'am', hh=h%12||12;
+  return hh+':'+(mn<10?'0'+mn:mn)+' '+ap;
+}
+
+/* Parse a sdrive label like "2 hr 15 min · 155 mi" → {mins, mi} */
+function parseDriveLabel(text){
+  var mins=0, mi=0;
+  var hm=text.match(/(\d+)\s*hr/); if(hm) mins+=parseInt(hm[1])*60;
+  var mm=text.match(/(\d+)\s*min/); if(mm) mins+=parseInt(mm[1]);
+  var mim=text.match(/(\d+)\s*mi\b/); if(mim) mi=parseInt(mim[1]);
+  return {mins:mins, mi:mi};
+}
+
+/* Format merged drive duration + distance back into a label */
+function fmtDriveLabel(mins, mi){
+  var t='';
+  if(mins>=60){var h=Math.floor(mins/60),m=mins%60; t=h+' hr'+(m?' '+m+' min':'');}
+  else{t=mins+' min';}
+  return t+(mi?' · '+mi+' mi':'');
+}
+
+/* Convert minutes to "HH:MM" for <input type="time"> */
+function toHHMM(m){
+  var h=Math.floor(m/60)%24, mn=m%60;
+  return (h<10?'0'+h:h)+':'+(mn<10?'0'+mn:mn);
+}
+
+/* Parse "HH:MM" from <input type="time"> to minutes */
+function fromHHMM(v){
+  var p=v.split(':'); return +p[0]*60+ +p[1];
+}
+
+/* ── PERSISTENCE: localStorage (instant) + Google Apps Script (cross-device) ──
+   Set GAS_URL to your deployed Apps Script web app URL to enable sync.
+   Falls back to localStorage automatically if GAS is unreachable.          */
+var LS_KEY  = 'roadtrip_departs_v1';
+var GAS_URL = 'https://script.google.com/macros/s/AKfycbyCJO5PX3h0cFuhZYm3NC9_9EdnH5-PmNEuvLzN7GuYDlZR7qzOHGY0vR9RNVy5lFilCQ/exec';
+
+/* ── GOOGLE PLACES API ──────────────────────────────────────────────────────
+   Paste your Google Cloud API key here (enable "Places API" in the console).
+   Leave blank to use the form without autocomplete.                          */
+var PLACES_KEY = 'AIzaSyAbwnAyHxdhhMceIaAiKO7BUy9siQR19Ss';
+
+var _placesReady = false;
+window._placesApiReady = function(){ _placesReady = true; };
+(function(){
+  if(!PLACES_KEY) return;
+  var s=document.createElement('script');
+  s.src='https://maps.googleapis.com/maps/api/js?key='+PLACES_KEY
+        +'&libraries=places&callback=_placesApiReady';
+  s.async=true; s.defer=true;
+  document.head.appendChild(s);
+})();
+
+function attachPlacesAutocomplete(form){
+  if(!_placesReady||!window.google) return;
+  var nameInput=form.querySelector('.abf-name');
+  var addrInput=form.querySelector('.abf-addr');
+  var notesInput=form.querySelector('.abf-notes');
+  var durInput=form.querySelector('.abf-dur');
+  var ratingInput=form.querySelector('.abf-rating');
+  nameInput.placeholder='Search Google Places…';
+  var ac=new google.maps.places.Autocomplete(nameInput,{
+    fields:['name','formatted_address','rating','user_ratings_total','editorial_summary','types']
+  });
+  nameInput.addEventListener('keydown',function(e){
+    if(e.key==='Enter') e.preventDefault(); // don't submit on autocomplete enter
+  });
+  ac.addListener('place_changed',function(){
+    var p=ac.getPlace();
+    if(!p||!p.name) return;
+    nameInput.value=p.name;
+    if(p.formatted_address) addrInput.value=p.formatted_address;
+    if(p.rating){
+      var rStr=p.rating.toFixed(1)+' stars';
+      if(p.user_ratings_total) rStr+=' ('+p.user_ratings_total.toLocaleString()+' reviews)';
+      ratingInput.value=rStr;
+    }
+    if(!notesInput.value&&p.editorial_summary&&p.editorial_summary.overview){
+      notesInput.value=p.editorial_summary.overview;
+    }
+    // Suggest a sensible stop duration by place type
+    var types=p.types||[];
+    if(durInput.value==='15'){
+      if(types.some(function(t){return t==='restaurant'||t==='food'||t==='cafe';})) durInput.value='40';
+      else if(types.some(function(t){return t==='lodging';})) durInput.value='60';
+      else if(types.some(function(t){return t==='tourist_attraction'||t==='park'||t==='museum';})) durInput.value='60';
+    }
+  });
+}
+
+var customStops  = [];   // [{id, afterId, name, stopMin, address, notes, rating}]
+var skippedStops = {};   // {stopId: true}
+var actualTimes  = {};   // {stopId: minutesSinceMidnight}
+
+function collectTimes(){
+  var departs={};
+  Object.keys(STOPS).forEach(function(id){
+    if(STOPS[id].depart!==null) departs[id]=STOPS[id].depart;
+  });
+  return {departs:departs, skipped:skippedStops, customStops:customStops, actual:actualTimes};
+}
+
+function saveTimes(){
+  var json=JSON.stringify(collectTimes());
+  try{localStorage.setItem(LS_KEY,json);}catch(e){}
+  if(GAS_URL){
+    fetch(GAS_URL+'?action=save&data='+encodeURIComponent(json)).catch(function(){});
+  }
+}
+
+function parseAndApply(txt){
+  try{
+    var data=JSON.parse(txt);
+    /* support old format (plain departs object) */
+    if(!data.departs) data={departs:data, skipped:{}, customStops:[]};
+    /* 1. restore custom stops into data + DOM (noSave=true) */
+    (data.customStops||[]).forEach(function(c){
+      addCustomStop(c.afterId,c.name,c.stopMin,c.id,true,c.address,c.notes,c.rating);
+    });
+    /* 2. apply skipped flags */
+    Object.keys(data.skipped||{}).forEach(function(id){
+      if(STOPS[id]){STOPS[id].skipped=true; skippedStops[id]=true;}
+    });
+    /* 3. apply saved departure times */
+    Object.keys(data.departs||{}).forEach(function(id){
+      var s=STOPS[id];
+      if(s&&s.depart!==null) s.depart=data.departs[id];
+    });
+    /* 4. recalculate arrive times only — departs are authoritative from saved data */
+    [1,2,3].forEach(function(day){
+      var ids=DAY_ORDER[day];
+      for(var i=1;i<ids.length;i++){
+        var p=STOPS[ids[i-1]],c=STOPS[ids[i]];
+        if(p&&c) c.arrive=p.depart+p.driveMin;
+      }
+    });
+    /* 5. restore actual logged times */
+    actualTimes=data.actual||{};
+    try{localStorage.setItem(LS_KEY,txt);}catch(e){}
+  }catch(e){}
+}
+
+function loadTimes(done){
+  function fromLocal(){
+    try{
+      var raw=localStorage.getItem(LS_KEY);
+      if(raw) parseAndApply(raw);
+    }catch(e){}
+    done();
+  }
+  if(!GAS_URL){fromLocal();return;}
+  fetch(GAS_URL+'?action=load')
+    .then(function(r){return r.text();})
+    .then(function(txt){parseAndApply(txt); done();})
+    .catch(fromLocal);
+}
+
+/* ── STOP EDITING ── */
+
+/* Tag existing .stop cards and .sdrive dividers with data attributes via JS
+   so we don't need to touch the HTML for every card. */
+function tagStopCards(){
+  [1,2,3].forEach(function(n){
+    var panel=document.getElementById('p'+n);
+    if(!panel) return;
+    panel.querySelectorAll('.stop').forEach(function(card){
+      var st=card.querySelector('[data-stop-id]');
+      if(st) card.setAttribute('data-stop-card',st.getAttribute('data-stop-id'));
+    });
+    var lastCardId=null;
+    panel.querySelectorAll('.stop,.sdrive').forEach(function(el){
+      if(el.classList.contains('stop')){
+        lastCardId=el.getAttribute('data-stop-card');
+      } else if(lastCardId&&!el.getAttribute('data-sdrive-after')){
+        el.setAttribute('data-sdrive-after',lastCardId);
+        var lbl=el.querySelector('.sdrive-label');
+        if(lbl&&!el.getAttribute('data-orig-label')){
+          el.setAttribute('data-orig-label',lbl.textContent);
+          var p=parseDriveLabel(lbl.textContent);
+          el.setAttribute('data-drive-mins',p.mins);
+          el.setAttribute('data-drive-mi',p.mi);
+        }
+      }
+    });
+  });
+}
+
+/* Recalculate sdrive labels for a day, merging drives across skipped stops */
+function updateAllSdriveLabels(day){
+  var ids=DAY_ORDER[day];
+  ids.forEach(function(id){
+    var sdrive=document.querySelector('[data-sdrive-after="'+id+'"]');
+    if(!sdrive) return;
+    var s=STOPS[id];
+    if(s&&s.skipped){
+      /* Hide this sdrive — the preceding stop's sdrive absorbs it */
+      sdrive.style.display='none';
+      var abw=sdrive.nextElementSibling;
+      if(abw&&abw.classList.contains('add-break-wrap')) abw.style.display='none';
+    } else {
+      sdrive.style.display='';
+      var abw=sdrive.nextElementSibling;
+      if(abw&&abw.classList.contains('add-break-wrap')) abw.style.display='';
+      /* Sum drive time/distance through any consecutively skipped stops after this one */
+      var totalMins=0, totalMi=0;
+      var i=ids.indexOf(id);
+      while(i<ids.length-1){
+        var curId=ids[i];
+        var curSdrive=document.querySelector('[data-sdrive-after="'+curId+'"]');
+        if(curSdrive){
+          totalMins+=parseInt(curSdrive.getAttribute('data-drive-mins')||0);
+          totalMi  +=parseInt(curSdrive.getAttribute('data-drive-mi')||0);
+        }
+        var nextId=ids[i+1];
+        if(nextId&&STOPS[nextId]&&STOPS[nextId].skipped){i++;}
+        else{break;}
+      }
+      var origMins=parseInt(sdrive.getAttribute('data-drive-mins')||0);
+      var origMi  =parseInt(sdrive.getAttribute('data-drive-mi')||0);
+      var lblEl=sdrive.querySelector('.sdrive-label');
+      if(lblEl){
+        if(totalMins!==origMins||totalMi!==origMi){
+          lblEl.textContent=fmtDriveLabel(totalMins,totalMi);
+        } else {
+          lblEl.textContent=sdrive.getAttribute('data-orig-label')||'';
+        }
+      }
+    }
+  });
+}
+
+function skipStop(id){
+  var s=STOPS[id]; s.skipped=true; skippedStops[id]=true;
+  if(s.type!=='start'&&s.arrive!==null) s.depart=s.arrive;
+  cascade(s.day,s.idx);
+  DAY_ORDER[s.day].forEach(renderStop);
+  syncSkipStyle(id);
+  updateAllSdriveLabels(s.day);
+  saveTimes();
+}
+function unskipStop(id){
+  var s=STOPS[id]; s.skipped=false; delete skippedStops[id];
+  if(s.type!=='start'&&s.arrive!==null) s.depart=s.arrive+s.stopMin;
+  cascade(s.day,s.idx);
+  DAY_ORDER[s.day].forEach(renderStop);
+  syncSkipStyle(id);
+  updateAllSdriveLabels(s.day);
+  saveTimes();
+}
+function syncSkipStyle(id){
+  var card=document.querySelector('[data-stop-card="'+id+'"]');
+  if(!card) return;
+  card.classList.toggle('skipped',!!STOPS[id].skipped);
+  var btn=card.querySelector('.skip-btn');
+  if(btn) btn.textContent=STOPS[id].skipped?'Restore':'Skip Stop';
+}
+
+function injectStopControls(){
+  [1,2,3].forEach(function(day){
+    DAY_ORDER[day].forEach(function(id){
+      var s=STOPS[id];
+      var card=document.querySelector('[data-stop-card="'+id+'"]');
+      if(!card||card.querySelector('.stop-ctrl')) return;
+      var ctrl=document.createElement('div'); ctrl.className='stop-ctrl';
+      if(s.type!=='end'){
+        if(s.custom){
+          var rb=document.createElement('button');
+          rb.className='stop-ctrl-btn danger'; rb.textContent='Remove Stop';
+          rb.onclick=function(){removeCustomStop(id);}; ctrl.appendChild(rb);
+        } else {
+          var sb=document.createElement('button');
+          sb.className='stop-ctrl-btn skip-btn';
+          sb.textContent=s.skipped?'Restore':'Skip Stop';
+          sb.onclick=function(){s.skipped?unskipStop(id):skipStop(id);}; ctrl.appendChild(sb);
+        }
+      }
+      var lb=document.createElement('button');
+      lb.className='stop-ctrl-btn';
+      lb.textContent=s.type==='start'?'Log Departure':'Log Arrival';
+      lb.onclick=function(){logActualNow(id);}; ctrl.appendChild(lb);
+      card.querySelector('.sbody').appendChild(ctrl);
+    });
+  });
+}
+
+function injectAddBreakButtons(){
+  document.querySelectorAll('[data-sdrive-after]').forEach(function(sdrive){
+    if(sdrive.nextElementSibling&&sdrive.nextElementSibling.classList.contains('add-break-wrap')) return;
+    var afterId=sdrive.getAttribute('data-sdrive-after');
+    var wrap=document.createElement('div');
+    wrap.className='add-break-wrap';
+    var btn=document.createElement('button');
+    btn.className='add-break-btn'; btn.textContent='+ Add a stop here';
+    btn.onclick=function(){showAddBreakForm(afterId,wrap,btn);};
+    wrap.appendChild(btn);
+    sdrive.after(wrap);
+  });
+}
+
+function showAddBreakForm(afterId,wrap,triggerBtn){
+  document.querySelectorAll('.add-break-form').forEach(function(f){f.remove();});
+  triggerBtn.style.display='none';
+  var form=document.createElement('div');
+  form.className='add-break-form';
+  form.innerHTML='<div class="abf-label">Add a Stop</div>'
+    +'<div class="abf-row">'
+    +'<input class="abf-name" placeholder="Gas station, bathroom…" type="text" maxlength="60">'
+    +'<input class="abf-dur" placeholder="min" type="number" min="1" max="180" value="15">'
+    +'<button class="abf-submit">Add</button>'
+    +'<button type="button" class="abf-cancel">✕</button>'
+    +'</div>'
+    +'<input class="abf-addr" placeholder="Address (auto-filled or type manually)" type="text" maxlength="120">'
+    +'<input class="abf-notes" placeholder="Notes (optional — shown on card)" type="text" maxlength="140">'
+    +'<input type="hidden" class="abf-rating" value="">';
+  form.querySelector('.abf-submit').onclick=function(){
+    var name=form.querySelector('.abf-name').value.trim()||'Quick Stop';
+    var min=parseInt(form.querySelector('.abf-dur').value)||15;
+    var addr=form.querySelector('.abf-addr').value.trim();
+    var notes=form.querySelector('.abf-notes').value.trim();
+    var rating=form.querySelector('.abf-rating').value.trim();
+    addCustomStop(afterId,name,min,null,false,addr,notes,rating);
+    form.remove(); triggerBtn.style.display='';
+  };
+  form.querySelector('.abf-cancel').onclick=function(){
+    form.remove(); triggerBtn.style.display='';
+  };
+  wrap.appendChild(form);
+  form.querySelector('.abf-name').focus();
+  // Attach Places autocomplete — retry briefly in case script is still loading
+  var _tries=0;
+  (function tryAttach(){
+    if(_placesReady) attachPlacesAutocomplete(form);
+    else if(PLACES_KEY && _tries++<15) setTimeout(tryAttach,200);
+  })();
+}
+
+function addCustomStop(afterId,name,stopMin,existingId,noSave,address,notes,rating){
+  var customId=existingId||('custom-'+Date.now());
+  var afterStop=STOPS[afterId];
+  if(!afterStop) return;
+  var day=afterStop.day;
+  var ids=DAY_ORDER[day];
+  var insertAt=ids.indexOf(afterId)+1;
+  if(!insertAt) return;
+  /* already loaded — skip duplicate */
+  if(STOPS[customId]) return;
+  ids.splice(insertAt,0,customId);
+  ids.forEach(function(id,i){if(STOPS[id]) STOPS[id].idx=i;});
+  STOPS[customId]={day:day,idx:insertAt,type:'mid',custom:true,
+    name:name,stopMin:stopMin,driveMin:0,depart:null,arrive:null,
+    address:address||'',notes:notes||'',rating:rating||''};
+  cascade(day,insertAt-1);
+  var found=false;
+  customStops.forEach(function(c){if(c.id===customId) found=true;});
+  if(!found) customStops.push({id:customId,afterId:afterId,name:name,stopMin:stopMin,address:address||'',notes:notes||'',rating:rating||''});
+  injectCustomStopCard(customId);
+  DAY_ORDER[day].forEach(renderStop);
+  injectStopControls();
+  injectAddBreakButtons();
+  if(!noSave) saveTimes();
+}
+
+function injectCustomStopCard(customId){
+  if(document.querySelector('[data-stop-card="'+customId+'"]')) return;
+  var s=STOPS[customId];
+  var ids=DAY_ORDER[s.day];
+  var nextId=ids[ids.indexOf(customId)+1];
+  var nextCard=document.querySelector('[data-stop-card="'+nextId+'"]');
+  if(!nextCard) return;
+  function esc(t){return t.replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  // Build Maps URL — prefer typed address, fall back to stop name
+  var mapsQuery=encodeURIComponent(s.address||s.name);
+  var mapsUrl='https://maps.apple.com/?q='+mapsQuery+'&dirflg=d';
+  var descLine='';
+  if(s.address) descLine+=esc(s.address);
+  if(s.rating) descLine+=(descLine?' · ':'')+esc(s.rating);
+  var inner='<span class="stime" data-stop-id="'+customId+'"></span>'
+    +'<div class="sname">'+esc(s.name)+'</div>';
+  if(descLine) inner+='<div class="sdesc">'+descLine+'</div>';
+  inner+='<div class="sdesc">'+s.stopMin+'-minute stop</div>';
+  if(s.notes) inner+='<span class="note">'+esc(s.notes)+'</span>';
+  inner+='<br><a class="nbtn" href="'+mapsUrl+'" target="_blank">Navigate</a>';
+  var card=document.createElement('div');
+  card.className='stop custom-stop';
+  card.setAttribute('data-stop-card',customId);
+  card.innerHTML='<div class="sdot d-charge">⏱</div>'
+    +'<div class="sbody">'+inner+'</div>';
+  nextCard.before(card);
+  renderStop(customId);
+}
+
+function removeCustomStop(id){
+  var s=STOPS[id], day=s.day;
+  var ids=DAY_ORDER[day], idx=ids.indexOf(id);
+  ids.splice(idx,1);
+  ids.forEach(function(sid,i){if(STOPS[sid]) STOPS[sid].idx=i;});
+  customStops=customStops.filter(function(c){return c.id!==id;});
+  delete STOPS[id];
+  cascade(day,Math.max(0,idx-1));
+  var card=document.querySelector('[data-stop-card="'+id+'"]');
+  if(card) card.remove();
+  DAY_ORDER[day].forEach(renderStop);
+  saveTimes();
+}
+
+function renderActualTime(id){
+  var card=document.querySelector('[data-stop-card="'+id+'"]');
+  if(!card) return;
+  var prev=card.querySelector('.actual-wrap'); if(prev) prev.remove();
+  if(actualTimes[id]===undefined) return;
+  var t=actualTimes[id], s=STOPS[id];
+  if(!s) return;
+  var ref=s.type==='start'?s.depart:s.arrive;
+  var label=s.type==='start'?'Actual departure':'Actual arrival';
+  var delta=(ref!==null&&ref!==undefined)?(t-ref):null;
+  var dHtml='';
+  if(delta!==null){
+    var abs=Math.abs(delta), h=Math.floor(abs/60), m=abs%60;
+    var ds=(h?h+'h ':'')+m+' min';
+    if(delta>2)      dHtml='<span class="actual-delta late">+'+ds+' late</span>';
+    else if(delta<-2) dHtml='<span class="actual-delta early">'+ds+' early</span>';
+    else              dHtml='<span class="actual-delta ontime">On time ✓</span>';
+  }
+  var wrap=document.createElement('div'); wrap.className='actual-wrap';
+  wrap.innerHTML='<span class="actual-chip">'+label+': <span class="actual-time-val">'+fmtMin(t)+'</span></span>'
+    +dHtml+'<button class="actual-edit-btn" onclick="showActualEntry(\''+id+'\')">✎</button>';
+  var stime=card.querySelector('[data-stop-id]');
+  if(stime) stime.after(wrap);
+}
+
+function showActualEntry(id){
+  var card=document.querySelector('[data-stop-card="'+id+'"]');
+  if(!card) return;
+  var prev=card.querySelector('.actual-entry'); if(prev){prev.remove();return;}
+  var t=actualTimes[id];
+  var now=t!==undefined?t:(function(){var d=new Date();return d.getHours()*60+d.getMinutes();})();
+  var hh=String(Math.floor(now/60)).padStart(2,'0'), mm=String(now%60).padStart(2,'0');
+  var entry=document.createElement('div'); entry.className='actual-entry';
+  entry.innerHTML='<input type="time" value="'+hh+':'+mm+'">'
+    +'<button class="actual-save-btn">Save</button>'
+    +(t!==undefined?'<button type="button" class="actual-clear-btn">Clear</button>':'');
+  entry.querySelector('.actual-save-btn').onclick=function(){
+    var val=entry.querySelector('input[type=time]').value; if(!val) return;
+    var p=val.split(':'); actualTimes[id]=parseInt(p[0])*60+parseInt(p[1]);
+    entry.remove(); renderActualTime(id); saveTimes();
+  };
+  if(t!==undefined) entry.querySelector('.actual-clear-btn').onclick=function(){
+    delete actualTimes[id]; entry.remove(); renderActualTime(id); saveTimes();
+  };
+  var wrap=card.querySelector('.actual-wrap');
+  if(wrap) wrap.after(entry);
+  else{ var stime=card.querySelector('[data-stop-id]'); if(stime) stime.after(entry); }
+  entry.querySelector('input[type=time]').focus();
+}
+
+function logActualNow(id){
+  var d=new Date(); actualTimes[id]=d.getHours()*60+d.getMinutes();
+  renderActualTime(id); saveTimes();
+}
+
+function initActualTimes(){
+  Object.keys(actualTimes).forEach(renderActualTime);
+}
+
+function initStopEditing(){
+  tagStopCards();
+  injectStopControls();
+  injectAddBreakButtons();
+  Object.keys(skippedStops).forEach(syncSkipStyle);
+  [1,2,3].forEach(updateAllSdriveLabels);
+  initActualTimes();
+}
+
+/* Recalculate stops after fromIdx. Skipped stops contribute 0 stop time. */
+function cascade(day, fromIdx){
+  var ids=DAY_ORDER[day];
+  for(var i=Math.max(1,fromIdx+1);i<ids.length;i++){
+    var prev=STOPS[ids[i-1]], cur=STOPS[ids[i]];
+    if(!prev||!cur) continue;
+    cur.arrive=prev.depart+prev.driveMin;
+    if(cur.type!=='end') cur.depart=cur.arrive+(cur.skipped?0:cur.stopMin);
+  }
+}
+
+/* Build the inner HTML for a stop's .stime element */
+function stopHTML(id){
+  var s=STOPS[id];
+  if(s.type==='end'){
+    return 'Arrive '+fmtMin(s.arrive);
+  }
+  var btn='<span class="depart-btn" data-depart-for="'+id+'">'
+        +fmtMin(s.depart)
+        +'<span class="depart-pen">✎</span>'
+        +'</span>';
+  if(s.type==='start'){
+    return (s.optional?'Leave ':''+'Depart ')+btn;
+  }
+  /* mid stop: show arrive and leave */
+  return 'Arrive '+fmtMin(s.arrive)+' · Leave '+btn;
+}
+
+function renderStop(id){
+  var el=document.querySelector('[data-stop-id="'+id+'"]');
+  if(el) el.innerHTML=stopHTML(id);
+}
+
+/* Replace the depart-btn with an inline time input */
+function editDepart(id, btn){
+  var s=STOPS[id];
+  var inp=document.createElement('input');
+  inp.type='time';
+  inp.className='depart-input';
+  inp.value=toHHMM(s.depart);
+
+  var done=false;
+  function commit(){
+    if(done) return;
+    done=true;
+    if(inp.value){
+      s.depart=fromHHMM(inp.value);
+      cascade(s.day, s.idx);
+      DAY_ORDER[s.day].forEach(renderStop);
+      saveTimes();
+    } else {
+      renderStop(id);
+    }
+  }
+  inp.addEventListener('change', commit);
+  inp.addEventListener('blur',   commit);
+
+  btn.replaceWith(inp);
+  inp.focus();
+}
+
+/* Delegate clicks on .depart-btn elements */
+document.addEventListener('click', function(e){
+  var btn = e.target.closest && e.target.closest('.depart-btn');
+  if(!btn) return;
+  var id = btn.getAttribute('data-depart-for');
+  if(id && STOPS[id]) editDepart(id, btn);
+});
+
+document.addEventListener('DOMContentLoaded', function(){
+  Object.keys(STOPS).forEach(renderStop);
+  tagStopCards(); /* must run before loadTimes so custom stop injection can find cards */
+  loadTimes(function(){
+    Object.keys(STOPS).forEach(renderStop);
+    initStopEditing();
+  });
+});
 </script>
 </body>
 </html>
