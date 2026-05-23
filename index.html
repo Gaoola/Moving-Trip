@@ -162,10 +162,14 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 .footer{text-align:center;padding:32px 20px;font-size:11px;color:var(--subtle);border-top:1px solid var(--border);letter-spacing:1px;text-transform:uppercase}
 
 /* ── TIME STAMP ── */
-.stime{
-  font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:1px;
-  text-transform:uppercase;color:var(--clay);margin-bottom:4px;display:block
-}
+.stime{font-family:var(--sans);margin-bottom:4px;display:block}
+.tr-row{display:flex;align-items:center;gap:5px;flex-wrap:wrap;margin-bottom:2px}
+.tr-lbl{font-size:9px;font-weight:600;letter-spacing:.7px;text-transform:uppercase;color:var(--muted);min-width:40px;flex-shrink:0}
+.tr-plan{font-size:11px;font-weight:600;letter-spacing:.5px;color:var(--clay);text-transform:uppercase}
+.tr-actual{font-size:11px;font-weight:700;color:var(--text)}
+.tr-sep{font-size:10px;color:var(--subtle)}
+.tr-log-btn{font-size:10px;color:var(--muted);background:none;border:1px solid var(--border);border-radius:5px;padding:1px 8px;cursor:pointer;font-family:var(--sans);-webkit-tap-highlight-color:transparent;transition:border-color .15s,color .15s}
+.tr-log-btn:active{border-color:var(--clay);color:var(--clay)}
 .sdrive{
   display:flex;align-items:center;gap:8px;padding:5px 0 5px 18px;margin-bottom:0
 }
@@ -225,7 +229,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
 .actual-wrap{margin-top:5px;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
 .actual-chip{font-size:10px;font-weight:600;letter-spacing:.6px;text-transform:uppercase;color:var(--clay)}
 .actual-time-val{font-weight:700}
-.actual-delta{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;white-space:nowrap}
+.actual-delta{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:600;white-space:nowrap;text-transform:none;letter-spacing:0}
 .actual-delta.late{background:#3A1A1A;color:#E08070}
 .actual-delta.early{background:#1A2E1A;color:#70C070}
 .actual-delta.ontime{color:var(--muted)}
@@ -347,6 +351,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
   <line x1="355" y1="60" x2="360" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
   <line x1="555" y1="60" x2="560" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
   <line x1="757" y1="60" x2="760" y2="170" stroke="#C8B89A" stroke-width=".6" opacity=".35"/>
+  <g id="rmap-dynamic">
   <path d="M62,150 C70,135 78,122 86,118 L197,107 L289,106"
         stroke="#A0694A" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
   <path d="M289,106 L391,92 L475,111 L648,107"
@@ -362,6 +367,7 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);-webkit-font
   <circle cx="648" cy="107" r="6.5" fill="#A0694A" stroke="#EDE6DC" stroke-width="1.5"/>
   <circle cx="62"  cy="150" r="6"   fill="#7A9480" stroke="#EDE6DC" stroke-width="1.5"/>
   <circle cx="838" cy="97"  r="6"   fill="#A04848" stroke="#EDE6DC" stroke-width="1.5"/>
+  </g>
   <text x="62"  y="165" font-family="-apple-system,sans-serif" font-size="8.5" fill="#7A9480" font-weight="500" text-anchor="middle" letter-spacing=".5">Chino</text>
   <text x="289" y="97"  font-family="-apple-system,sans-serif" font-size="8.5" fill="#A0694A" font-weight="500" text-anchor="middle" letter-spacing=".5">Flagstaff</text>
   <text x="648" y="98"  font-family="-apple-system,sans-serif" font-size="8.5" fill="#A0694A" font-weight="500" text-anchor="middle" letter-spacing=".5">Amarillo</text>
@@ -878,6 +884,24 @@ var DAY_ORDER = {
   3: ['d3-0','d3-1','d3-2','d3-3']
 };
 
+/* SVG x/y positions for each stop on the route map (viewBox 0 0 900 200) */
+var MAP_COORDS = {
+  'd1-0':{x:62,  y:150}, /* Chino (start)        */
+  'd1-1':{x:86,  y:118}, /* Barstow SC            */
+  'd1-2':{x:197, y:107}, /* Kingman SC            */
+  'd1-3':{x:289, y:106}, /* Flagstaff (overnight) */
+  'd2-0':{x:291, y:111}, /* Walnut Canyon         */
+  'd2-1':{x:296, y:103}, /* Flagstaff SC          */
+  'd2-2':{x:391, y:92 }, /* Gallup SC             */
+  'd2-3':{x:475, y:111}, /* Albuquerque SC        */
+  'd2-4':{x:641, y:108}, /* Cadillac Ranch        */
+  'd2-5':{x:651, y:107}, /* Amarillo hotel        */
+  'd3-0':{x:655, y:120}, /* Palo Duro Canyon      */
+  'd3-1':{x:661, y:107}, /* Amarillo SC           */
+  'd3-2':{x:807, y:94 }, /* OKC SC                */
+  'd3-3':{x:838, y:97 }  /* Shawnee (end)         */
+};
+
 var STOPS = {
   /* Day 1 */
   'd1-0':{day:1,idx:0,type:'start',             stopMin:0,  driveMin:75,  driveMi:85,  depart:600,  arrive:null},
@@ -920,6 +944,59 @@ function fmtDriveLabel(mins, mi){
   if(mins>=60){var h=Math.floor(mins/60),m=mins%60; t=h+' hr'+(m?' '+m+' min':'');}
   else{t=mins+' min';}
   return t+(mi?' · '+mi+' mi':'');
+}
+
+/* Get SVG coordinate for a stop; interpolates midpoint for custom stops */
+function getMapCoord(id){
+  if(MAP_COORDS[id]) return MAP_COORDS[id];
+  var s=STOPS[id]; if(!s) return null;
+  var ids=DAY_ORDER[s.day], idx=ids.indexOf(id);
+  var prev=null, next=null;
+  for(var i=idx-1;i>=0;i--){var c=MAP_COORDS[ids[i]];if(c){prev=c;break;}}
+  for(var i=idx+1;i<ids.length;i++){var c=MAP_COORDS[ids[i]];if(c){next=c;break;}}
+  if(prev&&next) return {x:(prev.x+next.x)/2,y:(prev.y+next.y)/2};
+  return prev||next||null;
+}
+
+/* Redraw the dynamic route lines and stop dots on the overview map */
+function drawMap(){
+  var g=document.getElementById('rmap-dynamic');
+  if(!g) return;
+  var html='';
+  var dayColors={1:'#A0694A',2:'#B8A080',3:'#7A9480'};
+  /* Day 2 starts visually from Flagstaff (d1-3), Day 3 from Amarillo (d2-5) */
+  var dayChain={2:'d1-3',3:'d2-5'};
+
+  [1,2,3].forEach(function(day){
+    var ids=DAY_ORDER[day];
+    var col=dayColors[day];
+    /* Collect all stop coords */
+    var pts=[];
+    ids.forEach(function(id){
+      var s=STOPS[id],c=getMapCoord(id);
+      if(s&&c) pts.push({id:id,s:s,c:c});
+    });
+    /* Route line: chain anchor → non-skipped stops */
+    var linePts=[];
+    if(dayChain[day]){ var ac=MAP_COORDS[dayChain[day]]; if(ac) linePts.push(ac); }
+    pts.forEach(function(p){ if(!p.s.skipped) linePts.push(p.c); });
+    if(linePts.length>=2){
+      var d=linePts.map(function(p,i){return (i?'L':'M')+p.x.toFixed(1)+','+p.y.toFixed(1);}).join(' ');
+      html+='<path d="'+d+'" stroke="'+col+'" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>';
+    }
+    /* Dots for non-skipped stops */
+    pts.forEach(function(pt){
+      if(pt.s.skipped) return;
+      var fill,r;
+      if(pt.s.type==='start'&&day===1){fill='#7A9480';r=6;}
+      else if(pt.s.type==='end'&&day===3){fill='#A04848';r=6;}
+      else if(pt.s.type==='end'){fill='#A0694A';r=6.5;}
+      else if(pt.s.custom){fill='#8A9E8C';r=4;}
+      else{fill='#C4A882';r=3.5;}
+      html+='<circle cx="'+pt.c.x.toFixed(1)+'" cy="'+pt.c.y.toFixed(1)+'" r="'+r+'" fill="'+fill+'" stroke="#EDE6DC" stroke-width="1.5"/>';
+    });
+  });
+  g.innerHTML=html;
 }
 
 /* Convert minutes to "HH:MM" for <input type="time"> */
@@ -994,7 +1071,7 @@ function attachPlacesAutocomplete(form){
 
 var customStops  = [];   // [{id, afterId, name, stopMin, address, notes, rating}]
 var skippedStops = {};   // {stopId: true}
-var actualTimes  = {};   // {stopId: minutesSinceMidnight}
+var actualTimes  = {};   // {stopId: {arrive?: mins, depart?: mins}}
 
 function collectTimes(){
   var departs={};
@@ -1038,8 +1115,14 @@ function parseAndApply(txt){
         if(p&&c) c.arrive=p.depart+p.driveMin;
       }
     });
-    /* 5. restore actual logged times */
+    /* 5. restore actual logged times (migrate old number format → object) */
     actualTimes=data.actual||{};
+    Object.keys(actualTimes).forEach(function(id){
+      if(typeof actualTimes[id]==='number'){
+        var v=actualTimes[id];
+        actualTimes[id]=(STOPS[id]&&STOPS[id].type==='start')?{depart:v}:{arrive:v};
+      }
+    });
     try{localStorage.setItem(LS_KEY,txt);}catch(e){}
   }catch(e){}
 }
@@ -1140,6 +1223,7 @@ function skipStop(id){
   DAY_ORDER[s.day].forEach(renderStop);
   syncSkipStyle(id);
   updateAllSdriveLabels(s.day);
+  drawMap();
   saveTimes();
 }
 function unskipStop(id){
@@ -1149,6 +1233,7 @@ function unskipStop(id){
   DAY_ORDER[s.day].forEach(renderStop);
   syncSkipStyle(id);
   updateAllSdriveLabels(s.day);
+  drawMap();
   saveTimes();
 }
 function syncSkipStyle(id){
@@ -1178,10 +1263,7 @@ function injectStopControls(){
           sb.onclick=function(){s.skipped?unskipStop(id):skipStop(id);}; ctrl.appendChild(sb);
         }
       }
-      var lb=document.createElement('button');
-      lb.className='stop-ctrl-btn';
-      lb.textContent=s.type==='start'?'Log Departure':'Log Arrival';
-      lb.onclick=function(){logActualNow(id);}; ctrl.appendChild(lb);
+      /* Log buttons are now inline in each tr-row via renderActualTime */
       card.querySelector('.sbody').appendChild(ctrl);
     });
   });
@@ -1261,6 +1343,7 @@ function addCustomStop(afterId,name,stopMin,existingId,noSave,address,notes,rati
   DAY_ORDER[day].forEach(renderStop);
   injectStopControls();
   injectAddBreakButtons();
+  drawMap();
   if(!noSave) saveTimes();
 }
 
@@ -1304,66 +1387,105 @@ function removeCustomStop(id){
   var card=document.querySelector('[data-stop-card="'+id+'"]');
   if(card) card.remove();
   DAY_ORDER[day].forEach(renderStop);
+  drawMap();
   saveTimes();
 }
 
 function renderActualTime(id){
   var card=document.querySelector('[data-stop-card="'+id+'"]');
   if(!card) return;
-  var prev=card.querySelector('.actual-wrap'); if(prev) prev.remove();
-  if(actualTimes[id]===undefined) return;
-  var t=actualTimes[id], s=STOPS[id];
-  if(!s) return;
-  var ref=s.type==='start'?s.depart:s.arrive;
-  var label=s.type==='start'?'Actual departure':'Actual arrival';
-  var delta=(ref!==null&&ref!==undefined)?(t-ref):null;
-  var dHtml='';
-  if(delta!==null){
-    var abs=Math.abs(delta), h=Math.floor(abs/60), m=abs%60;
-    var ds=(h?h+'h ':'')+m+' min';
-    if(delta>2)      dHtml='<span class="actual-delta late">+'+ds+' late</span>';
-    else if(delta<-2) dHtml='<span class="actual-delta early">'+ds+' early</span>';
-    else              dHtml='<span class="actual-delta ontime">On time ✓</span>';
-  }
-  var wrap=document.createElement('div'); wrap.className='actual-wrap';
-  wrap.innerHTML='<span class="actual-chip">'+label+': <span class="actual-time-val">'+fmtMin(t)+'</span></span>'
-    +dHtml+'<button class="actual-edit-btn" onclick="showActualEntry(\''+id+'\')">✎</button>';
-  var stime=card.querySelector('[data-stop-id]');
-  if(stime) stime.after(wrap);
+  var s=STOPS[id]; if(!s) return;
+  var rec=actualTimes[id]||{};
+  var fields=s.type==='start'?['depart']:s.type==='end'?['arrive']:['arrive','depart'];
+  fields.forEach(function(field){
+    var row=card.querySelector('.tr-row[data-tr-field="'+field+'"]');
+    if(!row) return;
+    row.querySelectorAll('.tr-sep,.tr-actual,.actual-delta,.actual-edit-btn,.tr-log-btn').forEach(function(el){el.remove();});
+    var t=rec[field];
+    if(t!==undefined){
+      var ref=field==='arrive'?s.arrive:s.depart;
+      var delta=(ref!==null&&ref!==undefined)?(t-ref):null;
+      var dHtml='';
+      if(delta!==null){
+        var abs=Math.abs(delta),h=Math.floor(abs/60),m=abs%60;
+        var ds=(h?h+'h ':'')+m+'m';
+        if(delta>2)       dHtml='<span class="actual-delta late">+'+ds+'</span>';
+        else if(delta<-2) dHtml='<span class="actual-delta early">−'+ds+'</span>';
+        else              dHtml='<span class="actual-delta ontime">✓</span>';
+      }
+      row.insertAdjacentHTML('beforeend',
+        '<span class="tr-sep">→</span>'
+        +'<span class="tr-actual">'+fmtMin(t)+'</span>'
+        +dHtml
+        +'<button class="actual-edit-btn" onclick="showActualEntry(\''+id+'\',\''+field+'\')">✎</button>'
+      );
+    } else {
+      var lb=document.createElement('button'); lb.className='tr-log-btn'; lb.textContent='Log';
+      (function(sid,f){lb.onclick=function(){logActualNow(sid,f);};})(id,field);
+      row.appendChild(lb);
+    }
+  });
 }
 
-function showActualEntry(id){
+function showActualEntry(id,field){
   var card=document.querySelector('[data-stop-card="'+id+'"]');
   if(!card) return;
-  var prev=card.querySelector('.actual-entry'); if(prev){prev.remove();return;}
-  var t=actualTimes[id];
+  /* Toggle off if already open for same field */
+  var prev=card.querySelector('.actual-entry[data-field="'+field+'"]');
+  if(prev){prev.remove();return;}
+  card.querySelectorAll('.actual-entry').forEach(function(e){e.remove();});
+  var rec=actualTimes[id]||{}, t=rec[field];
   var now=t!==undefined?t:(function(){var d=new Date();return d.getHours()*60+d.getMinutes();})();
   var hh=String(Math.floor(now/60)).padStart(2,'0'), mm=String(now%60).padStart(2,'0');
-  var entry=document.createElement('div'); entry.className='actual-entry';
+  var entry=document.createElement('div'); entry.className='actual-entry'; entry.setAttribute('data-field',field);
   entry.innerHTML='<input type="time" value="'+hh+':'+mm+'">'
     +'<button class="actual-save-btn">Save</button>'
     +(t!==undefined?'<button type="button" class="actual-clear-btn">Clear</button>':'');
   entry.querySelector('.actual-save-btn').onclick=function(){
     var val=entry.querySelector('input[type=time]').value; if(!val) return;
-    var p=val.split(':'); actualTimes[id]=parseInt(p[0])*60+parseInt(p[1]);
-    entry.remove(); renderActualTime(id); saveTimes();
+    var p=val.split(':');
+    if(!actualTimes[id]) actualTimes[id]={};
+    actualTimes[id][field]=parseInt(p[0])*60+parseInt(p[1]);
+    entry.remove(); renderActualTime(id);
+    if(field==='depart') propagateActualDepart(id);
+    saveTimes();
   };
   if(t!==undefined) entry.querySelector('.actual-clear-btn').onclick=function(){
-    delete actualTimes[id]; entry.remove(); renderActualTime(id); saveTimes();
+    if(actualTimes[id]){ delete actualTimes[id][field];
+      if(!Object.keys(actualTimes[id]).length) delete actualTimes[id]; }
+    entry.remove(); renderActualTime(id); saveTimes();
   };
-  var wrap=card.querySelector('.actual-wrap');
-  if(wrap) wrap.after(entry);
-  else{ var stime=card.querySelector('[data-stop-id]'); if(stime) stime.after(entry); }
+  /* Insert after the relevant tr-row */
+  var row=card.querySelector('.tr-row[data-tr-field="'+field+'"]');
+  if(row) row.after(entry);
+  else{ var st=card.querySelector('[data-stop-id]'); if(st) st.after(entry); }
   entry.querySelector('input[type=time]').focus();
 }
 
-function logActualNow(id){
-  var d=new Date(); actualTimes[id]=d.getHours()*60+d.getMinutes();
-  renderActualTime(id); saveTimes();
+/* When a departure is logged, auto-fill the next stop's arrival via driveMin */
+function propagateActualDepart(id){
+  var s=STOPS[id]; if(!s||!s.driveMin) return;
+  var ids=DAY_ORDER[s.day], idx=ids.indexOf(id);
+  if(idx<0||idx>=ids.length-1) return;
+  var nextId=ids[idx+1]; if(!STOPS[nextId]) return;
+  var depart=(actualTimes[id]||{}).depart; if(depart===undefined) return;
+  if(!actualTimes[nextId]) actualTimes[nextId]={};
+  actualTimes[nextId].arrive=depart+s.driveMin;
+  renderActualTime(nextId);
+}
+
+function logActualNow(id,field){
+  var d=new Date();
+  if(!actualTimes[id]) actualTimes[id]={};
+  actualTimes[id][field]=d.getHours()*60+d.getMinutes();
+  renderActualTime(id);
+  if(field==='depart') propagateActualDepart(id);
+  saveTimes();
 }
 
 function initActualTimes(){
-  Object.keys(actualTimes).forEach(renderActualTime);
+  /* Render all stops so Log buttons appear even when no actual times saved yet */
+  [1,2,3].forEach(function(day){ DAY_ORDER[day].forEach(renderActualTime); });
 }
 
 function initStopEditing(){
@@ -1372,6 +1494,7 @@ function initStopEditing(){
   injectAddBreakButtons();
   Object.keys(skippedStops).forEach(syncSkipStyle);
   [1,2,3].forEach(updateAllSdriveLabels);
+  drawMap();
   initActualTimes();
 }
 
@@ -1386,26 +1509,24 @@ function cascade(day, fromIdx){
   }
 }
 
-/* Build the inner HTML for a stop's .stime element */
+/* Build the inner HTML for a stop's .stime element — one .tr-row per time field */
 function stopHTML(id){
   var s=STOPS[id];
+  var dBtn='<span class="depart-btn" data-depart-for="'+id+'">'+fmtMin(s.depart)+'<span class="depart-pen">✎</span></span>';
+  var lbl=s.optional?'Leave':'Depart';
   if(s.type==='end'){
-    return 'Arrive '+fmtMin(s.arrive);
+    return '<div class="tr-row" data-tr-field="arrive"><span class="tr-lbl">Arrive</span><span class="tr-plan">'+fmtMin(s.arrive)+'</span></div>';
   }
-  var btn='<span class="depart-btn" data-depart-for="'+id+'">'
-        +fmtMin(s.depart)
-        +'<span class="depart-pen">✎</span>'
-        +'</span>';
   if(s.type==='start'){
-    return (s.optional?'Leave ':''+'Depart ')+btn;
+    return '<div class="tr-row" data-tr-field="depart"><span class="tr-lbl">'+lbl+'</span>'+dBtn+'</div>';
   }
-  /* mid stop: show arrive and leave */
-  return 'Arrive '+fmtMin(s.arrive)+' · Leave '+btn;
+  return '<div class="tr-row" data-tr-field="arrive"><span class="tr-lbl">Arrive</span><span class="tr-plan">'+fmtMin(s.arrive)+'</span></div>'
+        +'<div class="tr-row" data-tr-field="depart"><span class="tr-lbl">Leave</span>'+dBtn+'</div>';
 }
 
 function renderStop(id){
   var el=document.querySelector('[data-stop-id="'+id+'"]');
-  if(el) el.innerHTML=stopHTML(id);
+  if(el){ el.innerHTML=stopHTML(id); renderActualTime(id); }
 }
 
 /* Replace the depart-btn with an inline time input */
